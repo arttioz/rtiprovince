@@ -12,7 +12,7 @@
 	<div class="page-content row">
 		<div class="page-content-wrapper no-margin">
 
-			{!! Form::open(array('url'=>'deadconso?return='.$return, 'class'=>'form-horizontal validated','files' => true )) !!}
+			{!! Form::open(array('url'=>'deadconso?return='.$return, 'class'=>'form-horizontal validated','files' => true , 'id' => 'main-form' )) !!}
 			<div class="sbox">
 				<div class="sbox-title clearfix">
 					<div class="sbox-tools " >
@@ -376,23 +376,21 @@
 								<label for="AccProv" class=" control-label col-md-4 text-left"> จังหวัดที่ตาย <span class="asterix"> * </span></label>
 								<div class="col-md-6">
 
-									<select name="DeathProv">
+									<select name="DeathProv" id="DeathProv">
 
 										@if( Auth::user()->group_id == 1)
 											@foreach($location as $prov)
 
-												<option  @if($DeathProv->LOC_CODE == $prov->LOC_CODE) selected  @endif value="{{$prov->LOC_CODE}}">{{$prov->LOC_PROVINCE}}</option>
+												<option @if($DeathProv->LOC_CODE == $prov->LOC_CODE) selected  @endif value="{{$prov->LOC_CODE}}">{{trim($prov->LOC_PROVINCE) }}</option>
 
 											@endforeach
 										@else
 											@foreach($location as $prov)
 												@if($DeathProv->LOC_CODE == $prov->LOC_CODE)
-													<option  selected  value="{{$prov->LOC_CODE}}">{{$prov->LOC_PROVINCE}}</option>
+													<option  selected  value="{{$prov->LOC_CODE}}">{{trim($prov->LOC_PROVINCE)}}</option>
 												@endif
 											@endforeach
 										@endif
-
-
 
 									</select>
 								</div>
@@ -401,12 +399,19 @@
 								</div>
 							</div>
 
-							<div class="form-group  " >
+							<div class="form-group" style="height: 50vh" >
+								<label for="AccLatlong" class=" control-label col-md-4 text-left"> แผนที่เกิดเหตุ </label>
+								<input id="pac-input" class="controls" style="margin-top: 20px; width: 300px; height: 30px" type="text" placeholder="ค้นหา">
+								<div id="map" style=" height: 100%; width: 100%"></div>
+
+							</div>
+
+							<div class="form-group  "  style=" padding-top: 30px">
 								<label for="AccProv" class=" control-label col-md-4 text-left"> จังหวัดที่เกิดเหตุ <span class="asterix"> * </span></label>
 								<div class="col-md-6">
 									<select name="AccProv">
 										@foreach($location as $prov)
-											<option  @if($AccProv->LOC_CODE == $prov->LOC_CODE)  selected @endif  value="{{$prov->LOC_CODE}}">{{$prov->LOC_PROVINCE}}</option>
+											<option class="select_prov" @if($AccProv->LOC_CODE == $prov->LOC_CODE)  selected @endif  value="{{$prov->LOC_CODE}}">{{ trim($prov->LOC_PROVINCE)}}</option>
 										@endforeach
 
 									</select>
@@ -419,7 +424,8 @@
 							</div>
 
 
-							<div class="form-group  " >
+
+							<div class="form-group  "  >
 								<label for="AccDist" class=" control-label col-md-4 text-left"> อำเภอที่เกิดเหตุ <span class="asterix"> * </span></label>
 								<div class="col-md-6">
 									<input  type='text' name='AccDist' id='AccDist' value='{{ $row['AccDist'] }}'
@@ -441,7 +447,8 @@
 							</div>
 
 
-							<div class="form-group  " >
+
+							<div class="form-group  "  >
 								<label for="AccLatlong" class=" control-label col-md-4 text-left"> Latitude ที่เกิดเหตุ <span class="asterix"> * </span></label>
 								<div class="col-md-6">
 									<input  type='text' name='AccLatlong' id='AccLatlong' value='{{ $row['AccLatlong'] }}'
@@ -451,6 +458,7 @@
 
 								</div>
 							</div>
+
 							<div class="form-group  " >
 								<label for="Acclong" class=" control-label col-md-4 text-left">  Longitude ที่เกิดเหตุ <span class="asterix"> * </span></label>
 								<div class="col-md-6">
@@ -526,15 +534,294 @@
 			<input type="hidden" name="action_task" value="save" />
 
 			{!! Form::close() !!}
+
 		</div>
 	</div>
 
+	<script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyDSb5GVMgYcYMDBRvzHZb_CAsa-zL9t5pg&callback=initMap&libraries=places"
+			async defer></script>
 
 	<script type="text/javascript">
-        $(document).ready(function() {
+
+		var lat = '{{$row['AccLatlong']}}'
+		var long = '{{$row['Acclong']}}'
+		var map;
+		var marker = false;
+		function initMap() {
+
+			if (lat == ''){
+				lat = 15.8700
+			}else{
+				lat = parseFloat(lat)
+			}
+
+			if (long == ''){
+				long = 100.9925
+			}else{
+				long = parseFloat(long)
+			}
+
+			if(lat == 15.8700){
+				if (navigator.geolocation) {
+					navigator.geolocation.getCurrentPosition(showPosition , errorHandler, { enableHighAccuracy: false});
+				}
+			}
+
+			console.log(lat)
+			console.log(long)
+			var zoom = 8
+			if(lat == 15.8700){
+				zoom = 6
+			}
+
+			map = new google.maps.Map(document.getElementById('map'), {
+				center: {lat: lat, lng: long },
+				zoom: zoom
+			});
 
 
+			if(lat != 0.0){
+				marker = new google.maps.Marker({
+					position: {lat: lat, lng: long },
+					map: map,
+					draggable: true //make it draggable
+				});
+			}
 
+
+			google.maps.event.addListener(map, 'click', function(event) {
+				//Get the location that the user clicked.
+				var clickedLocation = event.latLng;
+				//If the marker hasn't been added.
+				console.log(clickedLocation)
+
+				lat = clickedLocation.lat()
+				long = clickedLocation.lng()
+
+				setMarkerLocation()
+				//Get the marker's location.
+				markerLocation();
+			});
+
+			var input = document.getElementById('pac-input');
+			var searchBox = new google.maps.places.SearchBox(input);
+			map.controls[google.maps.ControlPosition.TOP_LEFT].push(input);
+
+			// Bias the SearchBox results towards current map's viewport.
+			map.addListener('bounds_changed', function() {
+				searchBox.setBounds(map.getBounds());
+			});
+
+			searchBox.addListener('places_changed', function() {
+				var places = searchBox.getPlaces();
+
+				if (places.length == 0) {
+					return;
+				}
+
+				// For each place, get the icon, name and location.
+				var bounds = new google.maps.LatLngBounds();
+				places.forEach(function(place) {
+
+					console.log(place)
+					lat = place.geometry.location.lat()
+					long = place.geometry.location.lng()
+
+					setMarkerLocation()
+
+					if (!place.geometry) {
+						console.log("Returned place contains no geometry");
+						return;
+					}
+
+					if (place.geometry.viewport) {
+						// Only geocodes have viewport.
+						bounds.union(place.geometry.viewport);
+					} else {
+						bounds.extend(place.geometry.location);
+					}
+
+					return;
+				});
+				map.fitBounds(bounds);
+			});
+		}
+
+
+		function setMarkerLocation(){
+
+			var location = {lat: lat, lng: long }
+			if(marker === false){
+				//Create the marker.
+				marker = new google.maps.Marker({
+					position: location,
+					map: map,
+					draggable: true //make it draggable
+				});
+				//Listen for drag events!
+				google.maps.event.addListener(marker, 'dragend', function(event){
+					markerLocation();
+				});
+			} else{
+				//Marker has already been added, so just change its location.
+				marker.setPosition(location);
+			}
+			map.panTo(location);
+			map.setZoom(17);
+
+			geocodeLatLng(lat,long)
+
+		}
+
+		function showPosition(position) {
+
+			if (lat == 15.8700){
+				lat = position.coords.latitude;
+				long = position.coords.longitude;
+				setMarkerLocation();
+			}
+
+		}
+
+		function errorHandler(positionError) {
+			console.log(positionError);
+		}
+
+		function markerLocation(){
+			//Get location.
+			var currentLocation = marker.getPosition();
+			//Add lat and lng values to a field that we can save.
+			document.getElementById('AccLatlong').value = currentLocation.lat(); //latitude
+			document.getElementById('Acclong').value = currentLocation.lng(); //longitude
+		}
+
+		function geocodeLatLng(lat, lng) {
+			var geocoder = new google.maps.Geocoder;
+			var latlng = {lat: parseFloat(lat), lng: parseFloat(lng)};
+			geocoder.geocode({'location': latlng}, function (results, status) {
+				if (status === 'OK') {
+					console.log(results)
+					if (results[0]) {
+
+						var street = "";
+						var city = "";
+						var district = "";
+						var province = "";
+						var country = "";
+						var zipcode = "";
+						for (var i = 0; i < results.length; i++) {
+
+							console.log(results[i]);
+
+							if (results[i].types.includes("sublocality_level_2")  ||
+									results[i].types.includes("locality")
+									&& district == ""
+							)  {
+								console.log("type")
+								console.log(results[i].types)
+
+								city = results[i].address_components[0].long_name;
+								district = results[i].address_components[1].long_name;
+								if (results[i].address_components.length > 2)
+									province = results[i].address_components[2].long_name;
+							}
+							if (results[i].types[0] === "postal_code" && zipcode == "") {
+								zipcode = results[i].address_components[0].long_name;
+
+							}
+							if (results[i].types[0] === "country") {
+								country = results[i].address_components[0].long_name;
+							}
+							if (results[i].types[0] === "route" && street == "") {
+
+								for (var j = 0; j < 4; j++) {
+									if (j == 0) {
+										street = results[i].address_components[j].long_name;
+									} else {
+										street += ", " + results[i].address_components[j].long_name;
+									}
+								}
+
+							}
+							if (results[i].types[0] === "street_address") {
+								for (var j = 0; j < 4; j++) {
+									if (j == 0) {
+										street = results[i].address_components[j].long_name;
+									} else {
+										street += ", " + results[i].address_components[j].long_name;
+									}
+								}
+
+							}
+						}
+						if (zipcode == "") {
+							if (typeof results[0].address_components[8] !== 'undefined') {
+								zipcode = results[0].address_components[8].long_name;
+							}
+						}
+						if (country == "") {
+							if (typeof results[0].address_components[7] !== 'undefined') {
+								country = results[0].address_components[7].long_name;
+							}
+						}
+						if (province == "") {
+							if (typeof results[0].address_components[6] !== 'undefined') {
+								province = results[0].address_components[6].long_name;
+							}
+						}
+
+						if (district == "") {
+							if (typeof results[0].address_components[5] !== 'undefined') {
+								district = results[0].address_components[5].long_name;
+							}
+						}
+
+						if (city == "") {
+							if (typeof results[0].address_components[6] !== 'undefined') {
+								city = results[0].address_components[6].long_name;
+							}
+						}
+
+
+						var address = {
+							"street": street,
+							"subdistrict": city,
+							"district": district,
+							"province": province,
+							"country": country,
+							"zipcode": zipcode,
+						};
+						console.log(address);
+
+
+						document.getElementById('AccDist').value = address.district;
+						document.getElementById('AccSubDist').value = address.subdistrict;
+
+
+						$(".select_prov").filter(function() {
+							//may want to use $.trim in here
+							return $(this).html() == address.province;
+						}).prop('selected', true);
+
+
+					} else {
+						window.alert('No results found');
+					}
+				} else {
+					window.alert('Geocoder failed due to: ' + status);
+				}
+			});
+		}
+
+		$(document).ready(function() {
+
+			$('#main-form').on('keyup keypress', function(e) {
+				var keyCode = e.keyCode || e.which;
+				if (keyCode === 13) {
+					e.preventDefault();
+					return false;
+				}
+			});
 
             $('.removeMultiFiles').on('click',function(){
                 var removeUrl = '{{ url("deadconso/removefiles?file=")}}'+$(this).attr('url');
