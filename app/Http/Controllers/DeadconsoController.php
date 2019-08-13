@@ -164,7 +164,12 @@ class DeadconsoController extends Controller {
 					$data = $this->validatePost( $request );
 
                     $dead_date = Carbon::createFromFormat('Y-m-d', $data['DeadDate']);
-                    $birth_date = Carbon::createFromFormat('Y-m-d', $data['BirthDate']);
+                    try{
+                        $birth_date = Carbon::createFromFormat('Y-m-d', $data['BirthDate']);
+                    }catch (\Exception $e){
+                        $birth_date = Carbon::now();
+                    }
+
                     $now = Carbon::now();
 
                     if($dead_date->year < 2030 ){

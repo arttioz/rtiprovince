@@ -139,7 +139,7 @@ class DeathdataController extends Controller {
 
         $this->data['deaths'] = $deaths;
         $this->data['daterange'] = $daterange;
-        $this->data['startdate'] = $startDate;
+        $this->data['startdate'] = $startDate->addDay(1);
         $this->data['enddate'] = $endDate;
         $this->data['province_id'] = $province_id;
 
@@ -218,7 +218,7 @@ class DeathdataController extends Controller {
                 try{
                     $value->birthdate = Carbon::createFromFormat( "d/m/Y", $value->birthdate);
                 }catch (\Exception $exception){
-
+                    $value->birthdate = null;
                 }
 
                 try{
