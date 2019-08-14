@@ -26,4 +26,14 @@ Route::resource('location','LocationController');
 
 // End Routes for location 
 
+                    
+// Start Routes for dashboardrti 
+Route::resource('dashboardrti','DashboardrtiController');
+// End Routes for dashboardrti 
+
+                    
+// Start Routes for recoverydata 
+Route::resource('recoverydata','RecoverydataController');
+// End Routes for recoverydata 
+
                     ?>
