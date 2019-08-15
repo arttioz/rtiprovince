@@ -132,13 +132,15 @@ class DashboardrtiController extends Controller {
             }
         }
 
+        $locale_name = "";
         $province = location::where('LOC_CODE',$province_id)->first();
-        $locale_name = $province->LOC_PROVINCE;
-
-        $this->data['deaths'] = $deaths;
-        $this->data['province_id'] = $province_id;
+        if($province){
+            $locale_name = $province->LOC_PROVINCE;
+        }
 
         $this->data['province'] = $locale_name;
+        $this->data['deaths'] = $deaths;
+        $this->data['province_id'] = $province_id;
         $this->data['months'] = $this->getMonths();
         $this->data['monthly'] = 'มีนาคม';
 
