@@ -63,19 +63,17 @@ class DeathdataController extends Controller {
         $this->checkAuth();
 
 
-        $daterange = $request->input('daterange');
-        $daterange = explode(" - ",$daterange);
+        $start = $request->input('start');
+        $end = $request->input('end');
 
-
-        if(count($daterange) == 2){
-            $dateStart =  Carbon::createFromFormat('m/d/Y', date($daterange[0]))->subDay(1);
-            $dateEnd =  Carbon::createFromFormat('m/d/Y', date($daterange[1]));
+        if($start && $end){
+            $dateStart =  Carbon::createFromFormat('Y-m-d', date($start));
+            $dateEnd =  Carbon::createFromFormat('Y-m-d', date($end));
         }else{
-            $dateStart = Carbon::now()->startOfMonth()->subDay(1);
+            $dateStart = Carbon::now()->startOfMonth();
             $dateEnd =  Carbon::now();
         }
 
-        $daterange = $dateStart->format('m/d/Y')." - ".$dateEnd->format('m/d/Y');
 
         $locations = location::all();
         if( Auth::user()->group_id == 3){
@@ -89,13 +87,11 @@ class DeathdataController extends Controller {
 
         $citizen_id = $request->input('citizen_id');
 
-        $startDate = $dateStart;
-        $endDate = $dateEnd;
+        $this->data['startdate'] = $dateStart->format('Y-m-d');
+        $this->data['enddate'] = $dateEnd->format('Y-m-d');
 
-        $dateStart = $dateStart->addYear(543);
+        $dateStart = $dateStart->addYear(543)->subDay(1);
         $dateEnd = $dateEnd->addYear(543);
-
-//        dd($dateStart,$dateEnd);
 
         $deaths = deathdata::query();
         $deaths = $deaths->whereNull("deleted_at");
@@ -138,9 +134,7 @@ class DeathdataController extends Controller {
         }
 
         $this->data['deaths'] = $deaths;
-        $this->data['daterange'] = $daterange;
-        $this->data['startdate'] = $startDate->addDay(1);
-        $this->data['enddate'] = $endDate;
+//        $this->data['daterange'] = $daterange;
         $this->data['province_id'] = $province_id;
 
         return view('deathdata.index',$this->data);
@@ -311,15 +305,14 @@ class DeathdataController extends Controller {
     {
         $this->checkAuth();
 
-        $daterange = $request->input('daterange');
-        $daterange = explode(" - ",$daterange);
+        $start = $request->input('start');
+        $end = $request->input('end');
 
-
-        if(count($daterange) == 2){
-            $dateStart =  Carbon::createFromFormat('m/d/Y', date($daterange[0]))->subDay(1);
-            $dateEnd =  Carbon::createFromFormat('m/d/Y', date($daterange[1]));
+        if($start && $end){
+            $dateStart =  Carbon::createFromFormat('Y-m-d', date($start));
+            $dateEnd =  Carbon::createFromFormat('Y-m-d', date($end));
         }else{
-            $dateStart = Carbon::now()->startOfMonth()->subDay(1);
+            $dateStart = Carbon::now()->startOfMonth();
             $dateEnd =  Carbon::now();
         }
 
@@ -333,7 +326,7 @@ class DeathdataController extends Controller {
 
         $citizen_id = $request->input('citizen_id');
 
-        $dateStart = $dateStart->addYear(543);
+        $dateStart = $dateStart->addYear(543)->subDay(1);
         $dateEnd = $dateEnd->addYear(543);
 
         $deaths = deathdata::select(

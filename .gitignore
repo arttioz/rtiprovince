@@ -5,6 +5,7 @@ storage/
 Homestead.json
 Homestead.yaml
 .env
+package-lock.json
 
 database/rtidatarprovince_2019\.rar
 

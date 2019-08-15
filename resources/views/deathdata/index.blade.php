@@ -17,17 +17,18 @@
 
 
                     <div class="row">
-                        <div class="col-xs-12 col-sm-4 label-search">
-                            <label class="col-xs-12 col-sm-4" for="daterange">ช่วงวัน</label>
-                            {{--<input type="date" name="startdate" value="{{$startdate}}">--}}
-                            {{--<input type="date" name="enddate" value="{{$enddate}}">--}}
-
-                            <input class="col-xs-12 col-sm-8" type="text" style="min-width: 190px" name="daterange" id="daterange" value=" {{$daterange}}" />
+                        <div class="col-xs-12 col-sm-3 label-search">
+                            <label class="col-xs-12 col-sm-12" for="daterange">ตั้งแต่</label>
+                            <input type="text" class="form-control" name="start" id="startDate" autocomplete="off" value="{{$startdate}}"/>
                         </div>
-
-                        <div class="col-xs-12 col-sm-4 label-search">
+                        <div class="col-xs-12 col-sm-3 label-search">
+                            <label class="col-xs-12 col-sm-12" for="daterange">ถึง</label>
+                            <input type="text" class="form-control" name="end" id="endDate" autocomplete="off" value="{{$enddate}}"/>
+                        </div>
+                        <div class="col-xs-12 col-sm-3 label-search">
+                            <label class="col-xs-12 col-sm-12" for="daterange">จังหวัดที่เสียชีวิต</label>
                             <select name="province_id" id="province_id" class="form-control" required>
-                                <option value="" disabled selected>จังหวัดที่เสียชีวิต</option>
+                                <option value="" disabled selected>กรุณาเลือก</option>
                                 @foreach($locations as $location)
 
                                     <option @if($province_id == $location->LOC_CODE) selected @endif
@@ -38,12 +39,13 @@
                             </select>
                         </div>
 
-                        <div class="col-xs-12 col-sm-4 label-search">
-                            <input class="col-xs-12 col-sm-8 form-control"  type="text" name="citizen_id" value="" placeholder="เลขที่บัตรประชาชน">
+                        <div class="col-xs-12 col-sm-3 label-search">
+                            <label class="col-xs-12 col-sm-12" for="daterange">เลขที่บัตรประชาชน</label>
+                            <input class="form-control"  type="text" name="citizen_id" value="" placeholder="เลขที่บัตรประชาชน 13 หลัก">
                         </div>
 
                     </div>
-                    <div class="row">
+                    <div class="row" style="margin-top: 15px !important;">
                         <button id="search-btn" class="btn btn-primary col-xs-12 col-sm-3 pull-right" type="submit"> ค้นหา </button>
                     </div>
 
@@ -66,7 +68,7 @@
                             <a href="{{url("template")}}"> ตัวอย่าง File นำเข้า </a>
                         </div>
 
-                        <button  id="export-btn" style="margin-right: 10px; margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="submit"> Import ข้อมูล </button>
+                        <button  id="import-btn" style="margin-right: 10px; margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="submit"> Import ข้อมูล </button>
                         {!! Form::close() !!}
 
 
@@ -164,16 +166,14 @@
 
         $('#export-btn').click(function () {
 
-            var daterange = $("#daterange").val();
+            var start = $("#startDate").val();
+            var end = $("#endDate").val();
             var province_id = $("#province_id").val();
 
-            var url = '{{url("exportdata")}}?daterange='+ daterange+"&province_id="+province_id;
+            var url = '{{url("exportdata")}}?start='+start+"&end="+end+"&province_id="+province_id;
 
 //            alert(url);
-
             window.open(url);
-
-
         });
 
         $(function() {
@@ -200,10 +200,21 @@
 
             $('.table-responsive').doubleScroll();
 
-            $('input[name="daterange"]').daterangepicker({
-                opens: 'left'
-            }, function(start, end, label) {
-                console.log("A new date selection was made: " + start.format('YYYY-MM-DD') + ' to ' + end.format('YYYY-MM-DD'));
+
+            $('#startDate').datepicker({
+                language: "th",
+                orientation: "auto left",
+                autoclose: true,
+                todayHighlight: true,
+                format: "yyyy-mm-dd"
+            });
+
+            $('#endDate').datepicker({
+                language: "th",
+                orientation: "auto left",
+                autoclose: true,
+                todayHighlight: true,
+                format: "yyyy-mm-dd"
             });
         });
     </script>
