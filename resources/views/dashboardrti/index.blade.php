@@ -17,18 +17,19 @@
                 <div class="sbox-title">
                     {!! Form::open(array('url'=>'dashboardrti', 'class'=>'','parsley-validate'=>'','novalidate'=>' ','id'=>'search-form', 'method'=>'get' )) !!}
 
-                    <div class="row">
-                        <div class="col-xs-12 col-sm-4 label-search">
-                            <label class="col-xs-12 col-sm-12" for="daterange">ตั้งแต่</label>
-                            <input type="text" class="form-control" name="start" id="startDate" autocomplete="off" value="{{$startdate}}"/>
+                    <div class="flex-row-center flex-xs-column-start">
+                        <label class="flex w-auto" for="startDate">ตั้งแต่</label>
+                        <div class="flex col-xs-12 col-sm-3 label-search">
+                            <input type="text" class="form-control" name="start" id="startDate" autocomplete="off"
+                                   value="{{$startdate}}"/>
                         </div>
-                        <div class="col-xs-12 col-sm-4 label-search">
-                            <label class="col-xs-12 col-sm-12" for="daterange">ถึง</label>
-                            <input type="text" class="form-control" name="end" id="endDate" autocomplete="off" value="{{$enddate}}"/>
-                        </div>
+                        {{--                        <div class="col-xs-12 col-sm-4 label-search">--}}
+                        {{--                            <label class="col-xs-12 col-sm-12" for="endDate">ถึง</label>--}}
+                        {{--                            <input type="text" class="form-control" name="end" id="endDate" autocomplete="off" value="{{$enddate}}"/>--}}
+                        {{--                        </div>--}}
 
-                        <div class="col-xs-12 col-sm-4 label-search">
-                            <label class="col-xs-12 col-sm-6" for="daterange">จังหวัดที่เสียชีวิต</label>
+                        <label class="flex w-auto" for="daterange">จังหวัดที่เสียชีวิต</label>
+                        <div class="flex col-xs-12 col-sm-3 label-search">
                             <select name="province_id" id="province_id" class="form-control" required>
                                 <option value="" disabled selected>กรุณาเลือก</option>
                                 @foreach($locations as $location)
@@ -40,13 +41,19 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <div class="flex col-xs-12 col-sm-3">
+                            <button id="search-btn" class="btn btn-primary btn-block" type="submit">
+                                แสดงผล
+                            </button>
+                        </div>
                     </div>
 
-                    <div class="row" style="margin-top: 15px !important;">
-                        <button id="search-btn" class="btn btn-primary col-xs-12 col-sm-3 pull-right" type="submit">
-                            แสดงผล
-                        </button>
-                    </div>
+                    {{--                    <div class="row" style="margin-top: 15px !important;">--}}
+                    {{--                        <button id="search-btn" class="btn btn-primary col-xs-12 col-sm-3 " type="submit">--}}
+                    {{--                            แสดงผล--}}
+                    {{--                        </button>--}}
+                    {{--                    </div>--}}
 
                     {!! Form::close() !!}
                 </div>
@@ -57,79 +64,92 @@
                             <p style="font-size: 20px">จำนวนและอัตราการตายจากอุบัติเหตุทางถนน จ. {{$province}}</p>
                         </div>
                         {{-- Table --}}
-                        <div class="table-responsive flex-row-center">
-                            <table class="table table-striped table-bordered table-hover">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover tb-chart-details">
                                 <thead style="background-color: #FFE495">
                                 <tr>
-                                    <th scope="col">ปี พ.ศ.</th>
-                                    <th scope="col">จำนวน(คน)</th>
-                                    <th scope="col">ต่อประชากรแสนคน</th>
-                                    <th scope="col">ต่อเดือน</th>
-                                    <th scope="col">ต่อวัน</th>
+                                    <th scope="col" style="text-align: center">ปี พ.ศ.</th>
+                                    <th scope="col" style="text-align: center">จำนวน(คน)</th>
+                                    <th scope="col" style="text-align: center">ต่อประชากรแสนคน</th>
+                                    <th scope="col" style="text-align: center">ต่อเดือน</th>
+                                    <th scope="col" style="text-align: center">ต่อวัน</th>
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td scope="row">2562</td>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                    <td>@mdo</td>
-                                </tr>
+                                @foreach ($deathRate as $info)
+                                    @if ($info)
+                                        <tr>
+                                            <td scope="row" style="text-align: center">{{$info['year']}}</td>
+                                            <td style="text-align: right">{{$info['total']}}</td>
+                                            <td style="text-align: right">{{$info['per100K']}}</td>
+                                            <td style="text-align: right">{{$info['perMonth']}}</td>
+                                            <td style="text-align: right">{{$info['perDay']}}</td>
+                                        </tr>
+                                    @endif
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
                     <div class="sbox-title">
                         <div style="text-align: center; padding-top: 5px">
-                            <p style="font-size: 20px">จำนวนการตายจากอุบัติเหตุทางถนน จำแนกรายเดือนและตามแหล่งที่มา จ. {{$province}}</p>
+                            <p style="font-size: 20px">จำนวนการตายจากอุบัติเหตุทางถนน จำแนกรายเดือนและตามแหล่งที่มา
+                                จ. {{$province}}</p>
                         </div>
-                        <div class="table-responsive flex-row-center">
-                            <table class="table table-striped table-bordered table-hover">
+                        <div class="table-responsive">
+                            <table class="table table-striped table-bordered table-hover tb-chart-details">
                                 <thead style="background-color: #b9def0">
                                 <tr>
-                                    <th scope="col">แหล่งที่มา</th>
+                                    <th scope="col" style="text-align: center">แหล่งที่มา</th>
                                     @foreach($months as $key => $month)
-                                        <th scope="col">{{$key}}</th>
+                                        <th scope="col" style="text-align: center">{{$key}}</th>
                                     @endforeach
                                 </tr>
                                 </thead>
                                 <tbody>
-                                <tr>
-                                    <td scope="row">1</td>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
+                                @foreach ($monthlyDeathRate as $info)
+                                    @if ($info)
+                                        <tr>
+                                            <td scope="row" style="text-align: center">{{$info['source']}}</td>
+                                            @foreach ($months as $key => $month)
+                                                @isset($info['data'][$key])
+                                                    <td style="text-align: right">{{$info['data'][$key]}}</td>
+                                                @else
+                                                    <td style="text-align: right">-</td>
+                                                @endisset
+                                            @endforeach
+                                        </tr>
+                                    @endif
+                                @endforeach
                                 </tbody>
                             </table>
                         </div>
                     </div>
-                    <div class="sbox-title">
-                        <div style="text-align: center; padding-top: 5px">
-                            <p style="font-size: 20px">สถานการณ์ เดือน{{$monthly}}</p>
-                        </div>
-                        <div class="table-responsive flex-row-center">
-                            <table class="table table-striped table-bordered table-hover">
-                                <thead style="background-color: #FFBBBB">
-                                <tr>
-                                    <th scope="col">สถิติ</th>
-                                    <th scope="col">เดือนนี้</th>
-                                    <th scope="col">จำนวนสะสม(คน)</th>
-                                    <th scope="col">อัตราสะสม(ต่อ ปชก.แสนคน)</th>
-                                </tr>
-                                </thead>
-                                <tbody>
-                                <tr>
-                                    <td scope="row">1</td>
-                                    <td>Mark</td>
-                                    <td>Otto</td>
-                                    <td>@mdo</td>
-                                </tr>
-                                </tbody>
-                            </table>
-                        </div>
-                    </div>
+                    {{--                    <div class="sbox-title">--}}
+                    {{--                        <div style="text-align: center; padding-top: 5px">--}}
+                    {{--                            <p style="font-size: 20px">สถานการณ์ เดือน{{$monthly}}</p>--}}
+                    {{--                        </div>--}}
+                    {{--                        <div class="table-responsive flex-row-center">--}}
+                    {{--                            <table class="table table-striped table-bordered table-hover">--}}
+                    {{--                                <thead style="background-color: #FFBBBB">--}}
+                    {{--                                <tr>--}}
+                    {{--                                    <th scope="col">สถิติ</th>--}}
+                    {{--                                    <th scope="col">เดือนนี้</th>--}}
+                    {{--                                    <th scope="col">จำนวนสะสม(คน)</th>--}}
+                    {{--                                    <th scope="col">อัตราสะสม(ต่อ ปชก.แสนคน)</th>--}}
+                    {{--                                </tr>--}}
+                    {{--                                </thead>--}}
+                    {{--                                <tbody>--}}
+                    {{--                                <tr>--}}
+                    {{--                                    <td scope="row">1</td>--}}
+                    {{--                                    <td>Mark</td>--}}
+                    {{--                                    <td>Otto</td>--}}
+                    {{--                                    <td>@mdo</td>--}}
+                    {{--                                </tr>--}}
+                    {{--                                </tbody>--}}
+                    {{--                            </table>--}}
+                    {{--                        </div>--}}
+                    {{--                    </div>--}}
                 </div>
                 {{-- Chart --}}
                 <div class="sbox-title flex-row-center">
@@ -149,8 +169,8 @@
                             <div id="monthly-chart" class="chart"></div>
                         </div>
                     </div>
-                    <div class="table-responsive flex-row-center">
-                        <table class="table table-striped table-bordered table-hover" style="width: 800px">
+                    <div class="table-responsive">
+                        <table class="table table-striped table-bordered table-hover tb-chart-details">
                             <thead style="background-color: #d7ffcf">
                             <tr>
                                 <th scope="col">#</th>
@@ -160,12 +180,20 @@
                             </tr>
                             </thead>
                             <tbody>
-                            <tr>
-                                <td scope="row">1</td>
-                                <td>Mark</td>
-                                <td>Otto</td>
-                                <td>@mdo</td>
-                            </tr>
+                            @foreach ($compareAnnual as $info)
+                                @if ($info)
+                                    <tr>
+                                        <td scope="row" style="text-align: center">{{$info['year']}}</td>
+                                        @foreach ($months as $key => $month)
+                                            @isset($info['data'][$key])
+                                                <td style="text-align: right">{{$info['data'][$key]}}</td>
+                                            @else
+                                                <td style="text-align: right">-</td>
+                                            @endisset
+                                        @endforeach
+                                    </tr>
+                                @endif
+                            @endforeach
                             </tbody>
                         </table>
                     </div>
@@ -194,8 +222,25 @@
             align-items: center;
         }
 
+        .tb-chart-details{
+            width: 800px;
+            margin: 0 auto;
+        }
+
+        @media (max-width: 767px) {
+            .flex-xs-column-start {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+        }
+
         .flex {
             display: flex;
+            padding: 10px 15px;
+        }
+
+        .w-auto {
+            width: auto;
         }
 
         table.table-bordered {
@@ -219,7 +264,7 @@
             var end = $("#endDate").val();
             var province_id = $("#province_id").val();
 
-            var url = '{{url("exportdata")}}?start='+start+"&end="+end+"&province_id="+province_id;
+            var url = '{{url("exportdata")}}?start=' + start + "&end=" + end + "&province_id=" + province_id;
 
             window.open(url);
         });
@@ -230,7 +275,7 @@
             autoclose: true,
             todayHighlight: true,
             minViewMode: 1,
-            format: "yyyy-mm-dd"
+            format: "yyyy-mm"
         });
 
         $('#endDate').datepicker({
@@ -242,12 +287,21 @@
             format: "yyyy-mm-dd"
         });
 
+        let annualDeath = [];
+        @foreach($annualDeathRate as $key => $value)
+        annualDeath.push([
+            `{{$key}}`,
+            {{$value}}
+        ])
+        @endforeach
+
+
         Highcharts.chart('annual-chart', {
             chart: {
                 type: 'column'
             },
             title: {
-                text: 'อัตราตายจากอุบัติเหตุทางถนน ปี พ.ศ.'
+                text: `อัตราตายจากอุบัติเหตุทางถนน ปี พ.ศ.{{$year}}`
             },
             subtitle: {
                 text: ''
@@ -272,36 +326,29 @@
                 enabled: false
             },
             tooltip: {
-                pointFormat: 'Population in 2017: <b>{point.y:.1f} millions</b>'
+                pointFormat: 'จำนวน: <b>{point.y:.1f} คน</b>'
             },
             series: [{
                 name: 'Population',
                 colorByPoint: true,
-                data: [
-                    ['Shanghai', 24.2],
-                    ['Beijing', 20.8],
-                    ['Karachi', 14.9],
-                    ['Shenzhen', 13.7],
-                    ['Guangzhou', 13.1],
-                    ['Istanbul', 12.7],
-                    ['Mumbai', 12.4],
-                    ['Moscow', 12.2],
-                    ['São Paulo', 12.0],
-                    ['Delhi', 11.7],
-                    ['Kinshasa', 11.5],
-                    ['Tianjin', 11.2],
-                    ['Lahore', 11.1],
-                    ['Jakarta', 10.6],
-                    ['Dongguan', 10.6],
-                    ['Lagos', 10.6],
-                    ['Bengaluru', 10.3],
-                    ['Seoul', 9.8],
-                    ['Foshan', 9.3],
-                    ['Tokyo', 9.3]
-                ],
+                data: annualDeath,
 
             }]
         });
+
+
+        let compareMonthly = [
+                @foreach($compareMonthly as $key => $value)
+            {
+                name: `{{ $key }}`,
+                data: [
+                    @foreach($value as $data)
+                    {{ $data }},
+                    @endforeach
+                ]
+            },
+            @endforeach
+        ];
 
         Highcharts.chart('monthly-district-chart', {
             chart: {
@@ -369,6 +416,19 @@
             }]
         });
 
+        let compareAnnual = [
+                @foreach($compareAnnual as $key => $value)
+            {
+                name: `{{ $value['year'] }}`,
+                data: [
+                    @foreach($value['data'] as $data)
+                    {{ $data }},
+                    @endforeach
+                ]
+            },
+            @endforeach
+        ];
+
         Highcharts.chart('monthly-chart', {
 
             chart: {
@@ -377,15 +437,8 @@
                 }
             },
 
-            data: {
-                csvURL: 'https://cdn.jsdelivr.net/gh/highcharts/highcharts@v7.0.0/samples/data/analytics.csv',
-                beforeParse: function (csv) {
-                    return csv.replace(/\n\n/g, '\n');
-                }
-            },
-
             title: {
-                text: 'จำนวนตายจากอุบัติเหตุทางถนนจำแนกรายเดือน ปี พ.ศ. และ '
+                text: `จำนวนตายจากอุบัติเหตุทางถนนจำแนกรายเดือน ปี พ.ศ. ${compareAnnual[0].name} และ ${compareAnnual[1].name}`
             },
 
             subtitle: {
@@ -466,15 +519,7 @@
                 }
             },
 
-            series: [{
-                name: 'All sessions',
-                lineWidth: 4,
-                marker: {
-                    radius: 4
-                }
-            }, {
-                name: 'New users'
-            }]
+            series: compareAnnual
         });
 
     </script>
