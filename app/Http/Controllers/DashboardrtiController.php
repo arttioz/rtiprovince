@@ -174,9 +174,19 @@ class DashboardrtiController extends Controller
         for ($i = 0; $i < 4; $i++) {
 
             $now = Carbon::now()->addYear(540 + $i);
+            $year = $now->year;
             $deaths = deathdata::query();
             $deaths = $deaths->whereNull("deleted_at");
             $deaths = $deaths->whereYear('DeadDate', $now);
+
+            $deathNewyear = deathdata::query();
+            $deathNewyear = $deathNewyear->whereNull("deleted_at");
+
+            $fromNew = $year."-12-27";
+            $toNew  =($year+1)."-01-3";
+
+            $fromSong = $year."-04-11";
+            $toSong  = $year."-04-17";
 
 
             if ($province_id) {
@@ -185,14 +195,28 @@ class DashboardrtiController extends Controller
                         $query->where('dead_conso.AccProv', '=', $province_id)
                             ->orWhere('dead_conso.DeathProv', '=', $province_id);
                     });
+                $deathNewyear = $deathNewyear->where(
+                    function ($query) use ($province_id) {
+                        $query->where('dead_conso.AccProv', '=', $province_id)
+                            ->orWhere('dead_conso.DeathProv', '=', $province_id);
+                    });
             }
+
+
+
+            $death_count = $deaths->count();
+
+            $death_newyear_count = $deathNewyear->whereBetween('DeadDate', array($fromNew, $toNew))->count();
+            $death_songkran_count = $deaths->whereBetween('DeadDate', array($fromSong, $toSong))->count();
 
             $data = [
                 'year' => $now->format('Y'),
-                'total' => $deaths ? $deaths->count() : 0,
-                'per100K' => $deaths ? $this->numberFormat($deaths->count()) : 0,
-                'perMonth' => $deaths ? $this->numberFormat($deaths->count()) : 0,
-                'perDay' => $deaths ? $this->numberFormat($deaths->count()) : 0,
+                'total' => $deaths ? $death_count : 0,
+                'per100K' => $deaths ? $this->numberFormat($death_count) : 0,
+                'newYear' => $deaths ? $this->numberFormat($death_newyear_count) : 0,
+                'songkran' => $deaths ? $this->numberFormat($death_songkran_count) : 0,
+                'perMonth' => ceil((($deaths ? $this->numberFormat($death_count) : 0) / 12) * 100)/100,
+                'perDay' =>  ceil((( $deaths ? $this->numberFormat($death_count) : 0) / 365)* 100)/100,
             ];
             array_push($info, $data);
         }

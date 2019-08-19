@@ -70,7 +70,9 @@
                                 <tr>
                                     <th scope="col" style="text-align: center">ปี พ.ศ.</th>
                                     <th scope="col" style="text-align: center">จำนวน(คน)</th>
-                                    <th scope="col" style="text-align: center">ต่อประชากรแสนคน</th>
+                                    <th scope="col" style="text-align: center">ปีใหม่</th>
+                                    <th scope="col" style="text-align: center">สงกราน</th>
+{{--                                    <th scope="col" style="text-align: center">ต่อประชากรแสนคน</th>--}}
                                     <th scope="col" style="text-align: center">ต่อเดือน</th>
                                     <th scope="col" style="text-align: center">ต่อวัน</th>
                                 </tr>
@@ -81,7 +83,9 @@
                                         <tr>
                                             <td scope="row" style="text-align: center">{{$info['year']}}</td>
                                             <td style="text-align: right">{{$info['total']}}</td>
-                                            <td style="text-align: right">{{$info['per100K']}}</td>
+                                            <td style="text-align: right">{{$info['newYear']}}</td>
+                                            <td style="text-align: right">{{$info['songkran']}}</td>
+{{--                                            <td style="text-align: right">{{$info['per100K']}}</td>--}}
                                             <td style="text-align: right">{{$info['perMonth']}}</td>
                                             <td style="text-align: right">{{$info['perDay']}}</td>
                                         </tr>
