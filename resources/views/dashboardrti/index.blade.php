@@ -353,7 +353,7 @@
                 type: 'column'
             },
             title: {
-                text: 'อัตราตายจากอุบัติเหตุทางถนน ประจำเดือน{{$monthly}} ปี พ.ศ. และ '
+                text: `อัตราตายจากอุบัติเหตุทางถนน ประจำเดือน{{$monthly}} ปี พ.ศ.{{$compareMonthly['first'] }} และ {{$compareMonthly['second'] }}`
             },
             subtitle: {
                 text: null
