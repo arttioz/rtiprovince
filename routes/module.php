@@ -36,4 +36,9 @@ Route::resource('dashboardrti','DashboardrtiController');
 Route::resource('recoverydata','RecoverydataController');
 // End Routes for recoverydata 
 
+                    
+// Start Routes for usersdemo 
+Route::resource('usersdemo','UsersdemoController');
+// End Routes for usersdemo 
+
                     ?>

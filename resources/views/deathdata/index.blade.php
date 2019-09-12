@@ -7,15 +7,11 @@
             {{--<li  class="active"> {{ $pageTitle }} </li>--}}
         {{--</ol>--}}
     </section>
-
     <div class="page-content row">
         <div class="page-content-wrapper no-margin">
-
             <div class="sbox">
                 <div class="sbox-title">
                     {!! Form::open(array('url'=>'deathdata', 'class'=>'','parsley-validate'=>'','novalidate'=>' ','id'=>'search-form', 'method'=>'get' )) !!}
-
-
                     <div class="row">
                         <div class="col-xs-12 col-sm-3 label-search">
                             <label class="col-xs-12 col-sm-12" for="daterange">ตั้งแต่</label>
@@ -60,7 +56,6 @@
                         <button id="export-btn"  style="margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="button">
                             Download ข้อมูล
                         </button>
-
                         {!! Form::open(array('url'=>'importdata', 'id'=>'import-form', 'enctype' => 'multipart/form-data' )) !!}
 
                         <div class="col-xs-3 col-sm-3 col-md-2">
@@ -71,18 +66,12 @@
                         <button  id="import-btn" style="margin-right: 10px; margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="submit"> Import ข้อมูล </button>
                         {!! Form::close() !!}
 
-
-
                         <a href="{{url("deadconso")."/create?province_id=".$province_id."&return=".urlencode( url()->full() )}}">
                             <button id="insert-btn"  style="margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="button">
                                 เพิ่ม ข้อมูล
                             </button>
                         </a>
-
-
                     </div>
-
-
                     <div class="table-responsive">
                         <table class="table table-bordered "    >
                             <thead>

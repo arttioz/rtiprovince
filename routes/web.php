@@ -89,3 +89,5 @@ Route::post('importdata', 'DeathdataController@store');
 Route::get('template', 'DeathdataController@downloadTemplate');
 Route::get('deletedata', 'DeathdataController@destroy');
 
+Route::get('recovery', 'RecoverydataController@recovery');
+

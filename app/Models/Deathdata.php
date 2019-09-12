@@ -1,14 +1,17 @@
 <?php namespace App\Models;
 
+use Carbon\Carbon;
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\SoftDeletes;
 
 class deathdata extends Sximo  {
 
     protected $table = 'dead_conso';
     protected $primaryKey = 'id';
+    use SoftDeletes;
 
-//    protected $dateFormat = 'Y-m-d';
+//    protected $dateFormat = 'Y-m-d H:i:s';
 
 
     public function __construct() {

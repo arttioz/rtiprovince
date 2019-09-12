@@ -59,9 +59,7 @@ class DeathdataController extends Controller {
 
     public function index( Request $request )
     {
-
         $this->checkAuth();
-
 
         $start = $request->input('start');
         $end = $request->input('end');
@@ -417,8 +415,9 @@ class DeathdataController extends Controller {
             }
         }
 
-        $data->deleted_at = Carbon::now();
-        $data->save();
+//        $data->deleted_at = Carbon::now();
+//        $data->save();
+        $data->delete();
 
 
         return redirect( $return_url )->with('message',__('core.note_success'))->with('status','success');

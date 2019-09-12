@@ -372,7 +372,35 @@
 								</div>
 							</div>
 
-							<div class="form-group  " >
+							<div class="form-group" style="color: #bd362f">
+								<label for="Sex" class=" control-label col-md-4 text-left" style="color: #bd362f"> ลักษณะถนน <span class="asterix"> * </span></label>
+								<div class="col-md-6">
+									<select name="Sex" id="Sex" style="color: #bd362f">
+										<option value="1"> ถนนลูกรัง </option>
+										<option value="2"> ถนนคอนกรีต </option>
+										<option value="3"> ถนนลาดยาง </option>
+									</select>
+
+								</div>
+								<div class="col-md-6">
+								</div>
+							</div>
+
+							<div class="form-group" style="color: #bd362f">
+								<label for="Sex" class=" control-label col-md-4 text-left"  style="color: #bd362f"> หน่วยงานที่รับผิดชอบถนน <span class="asterix"> * </span></label>
+								<div class="col-md-6">
+									<select name="Sex" id="Sex">
+										<option value="1"> กรมทางหลวงชนบท </option>
+										<option value="2"> กรมทางหลวงท้องถิ่น </option>
+										<option value="3"> กรมทางหลวงสัมปทาน </option>
+									</select>
+
+								</div>
+								<div class="col-md-2">
+								</div>
+							</div>
+
+							<div class="form-group">
 								<label for="AccProv" class=" control-label col-md-4 text-left"> จังหวัดที่ตาย <span class="asterix"> * </span></label>
 								<div class="col-md-6">
 
