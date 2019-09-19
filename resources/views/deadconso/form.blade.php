@@ -372,13 +372,13 @@
 								</div>
 							</div>
 
-							<div class="form-group" style="color: #bd362f">
-								<label for="Sex" class=" control-label col-md-4 text-left" style="color: #bd362f"> ลักษณะถนน <span class="asterix"> * </span></label>
+							<div class="form-group" >
+								<label for="road_type" class=" control-label col-md-4 text-left"> ลักษณะถนน <span class="asterix"> * </span></label>
 								<div class="col-md-6">
-									<select name="Sex" id="Sex" style="color: #bd362f">
-										<option value="1"> ถนนลูกรัง </option>
-										<option value="2"> ถนนคอนกรีต </option>
-										<option value="3"> ถนนลาดยาง </option>
+									<select name="road_type" id="road_type">
+										<option @if($row['road_type'] == 1) selected @endif value="1"> ถนนลูกรัง </option>
+										<option @if($row['road_type'] == 2) selected @endif value="2"> ถนนคอนกรีต </option>
+										<option @if($row['road_type'] == 3) selected @endif value="3"> ถนนลาดยาง </option>
 									</select>
 
 								</div>
@@ -386,13 +386,29 @@
 								</div>
 							</div>
 
-							<div class="form-group" style="color: #bd362f">
-								<label for="Sex" class=" control-label col-md-4 text-left"  style="color: #bd362f"> หน่วยงานที่รับผิดชอบถนน <span class="asterix"> * </span></label>
+							<div class="form-group">
+								<label for="road_department" class=" control-label col-md-4 text-left"> หน่วยงานที่รับผิดชอบถนน <span class="asterix"> * </span></label>
 								<div class="col-md-6">
-									<select name="Sex" id="Sex">
-										<option value="1"> กรมทางหลวงชนบท </option>
-										<option value="2"> กรมทางหลวงท้องถิ่น </option>
-										<option value="3"> กรมทางหลวงสัมปทาน </option>
+									<select name="road_department" id="road_department">
+										<option @if($row['road_department'] == 1) selected @endif value="1"> กรมทางหลวงชนบท </option>
+										<option @if($row['road_department'] == 2) selected @endif value="2"> กรมทางหลวงท้องถิ่น </option>
+										<option @if($row['road_department'] == 3) selected @endif value="3"> กรมทางหลวงสัมปทาน </option>
+									</select>
+
+								</div>
+								<div class="col-md-2">
+								</div>
+							</div>
+
+							<div class="form-group">
+								<label for="risk" class=" control-label col-md-4 text-left"> พฤติกรรมเสี่ยง <span class="asterix"> * </span></label>
+								<div class="col-md-6">
+									<select name="risk" id="risk">
+										<option @if($row['risk'] == 1) selected @endif value="1"> แอลกอฮอล  </option>
+										<option @if($row['risk'] == 2) selected @endif value="2"> หมวกนิรภัย(เฉพาะจยย) </option>
+										<option @if($row['risk'] == 3) selected @endif value="3"> เข็มขัดนิรภัย (เฉพาะรถ)  </option>
+										<option @if($row['risk'] == 4) selected @endif value="4"> ยา  </option>
+										<option @if($row['risk'] == 5) selected @endif value="5"> โทรศัพท์  </option>
 									</select>
 
 								</div>
@@ -859,6 +875,22 @@
                 return false;
             });
 
+            $('#BirthDate').change(function () {
+				var startsate = $('#BirthDate').val().split("-");
+
+				$('#DeadDate').change(function () {
+					var deaddate = $('#DeadDate').val().split("-");
+					var age = deaddate[0] - startsate[0];
+					$('#Age').val(age);
+				})
+			});
+
+
+			$('#Age').keyup(function () {
+				$('#BirthDate').val("");
+				$('#DeadDate').val("");
+			})
         });
 	</script>
+
 @stop
