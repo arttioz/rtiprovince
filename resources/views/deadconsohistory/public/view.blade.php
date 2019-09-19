@@ -136,6 +136,18 @@
 						<td>{{ $row->department_id}} </td>
 						
 					</tr>
+				
+					<tr>
+						<td width='30%' class='label-view text-right'>{{ SiteHelpers::activeLang('User Level', (isset($fields['user_level']['language'])? $fields['user_level']['language'] : array())) }}</td>
+						<td>{{ $row->user_level}} </td>
+						
+					</tr>
+				
+					<tr>
+						<td width='30%' class='label-view text-right'>{{ SiteHelpers::activeLang('District Code', (isset($fields['district_code']['language'])? $fields['district_code']['language'] : array())) }}</td>
+						<td>{{ $row->district_code}} </td>
+						
+					</tr>
 						
 					<tr>
 						<td width='30%' class='label-view text-right'></td>

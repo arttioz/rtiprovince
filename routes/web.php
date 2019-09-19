@@ -91,3 +91,5 @@ Route::get('deletedata', 'DeathdataController@destroy');
 
 Route::get('recovery', 'RecoverydataController@recovery');
 
+Route::get('deadconsohistory/{id}', 'Deadconsohistory@index');
+

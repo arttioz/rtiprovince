@@ -3,11 +3,11 @@
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
 
-class usersdemo extends Sximo  {
+class deadconsohistory extends Sximo  {
 	
-	protected $table = 'tb_users';
+	protected $table = 'dead_conso_history';
 	protected $primaryKey = 'id';
-    protected $hidden = ['password'];
+
 	public function __construct() {
 		parent::__construct();
 		
@@ -15,12 +15,12 @@ class usersdemo extends Sximo  {
 
 	public static function querySelect(  ){
 		
-		return "  SELECT tb_users.* FROM tb_users  ";
+		return "  SELECT dead_conso_history.* FROM dead_conso_history  ";
 	}	
 
 	public static function queryWhere(  ){
 		
-		return "  WHERE tb_users.id IS NOT NULL ";
+		return "  WHERE dead_conso_history.id IS NOT NULL ";
 	}
 	
 	public static function queryGroup(){

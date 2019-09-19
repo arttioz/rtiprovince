@@ -1,6 +1,6 @@
 
 
-		 {!! Form::open(array('url'=>'usersdemo', 'class'=>'form-horizontal','files' => true , 'parsley-validate'=>'','novalidate'=>' ')) !!}
+		 {!! Form::open(array('url'=>'deadconsohistory', 'class'=>'form-horizontal','files' => true , 'parsley-validate'=>'','novalidate'=>' ')) !!}
 
 	@if(Session::has('messagetext'))
 	  
@@ -15,7 +15,7 @@
 
 
 <div class="col-md-12">
-						<fieldset><legend> UsersDemo</legend>
+						<fieldset><legend> DeadConsoHistory</legend>
 									
 									  <div class="form-group  " >
 										<label for="Id" class=" control-label col-md-4 text-left"> Id <span class="asterix"> * </span></label>
@@ -233,6 +233,26 @@
 										<label for="Department Id" class=" control-label col-md-4 text-left"> Department Id <span class="asterix"> * </span></label>
 										<div class="col-md-6">
 										  <input  type='text' name='department_id' id='department_id' value='{{ $row['department_id'] }}' 
+						     class='form-control input-sm ' /> 
+										 </div> 
+										 <div class="col-md-2">
+										 	
+										 </div>
+									  </div> 					
+									  <div class="form-group  " >
+										<label for="User Level" class=" control-label col-md-4 text-left"> User Level <span class="asterix"> * </span></label>
+										<div class="col-md-6">
+										  <input  type='text' name='user_level' id='user_level' value='{{ $row['user_level'] }}' 
+						     class='form-control input-sm ' /> 
+										 </div> 
+										 <div class="col-md-2">
+										 	
+										 </div>
+									  </div> 					
+									  <div class="form-group  " >
+										<label for="District Code" class=" control-label col-md-4 text-left"> District Code <span class="asterix"> * </span></label>
+										<div class="col-md-6">
+										  <input  type='text' name='district_code' id='district_code' value='{{ $row['district_code'] }}' 
 						     class='form-control input-sm ' /> 
 										 </div> 
 										 <div class="col-md-2">

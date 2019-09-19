@@ -104,9 +104,10 @@
                                         <a href="{{url("deadconso")."/".$death->id."/edit?return=". urlencode( url()->full() ) }}">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </a>
-
-
                                         <i data="{{$death->id}}" class="fa fa-trash delete-button" aria-hidden="true"></i>
+                                        <a href="{{url("deadconsohistory")."?id=".$death->id}}">
+                                            <i class="fa fa-history" aria-hidden="true"></i>
+                                        </a>
 
                                     </td>
                                     <td scope="col">{{$death->id}}</td>
