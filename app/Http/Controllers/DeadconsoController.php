@@ -96,8 +96,10 @@ class DeadconsoController extends Controller {
 		$this->data['id'] = '';
 		return view($this->module.'.form',$this->data);
 	}
-	function edit( Request $request , $id ) 
-	{$this->checkAuth();
+	function edit( Request $request , $id )
+
+	{
+	    $this->checkAuth();
 		$this->hook( $request , $id );
 		if(!isset($this->data['row']))
 			return redirect($this->module)->with('message','Record Not Found !')->with('status','error');
@@ -109,6 +111,19 @@ class DeadconsoController extends Controller {
 		$this->data['AccProv'] = location::where("LOC_CODE",$this->data['row']['AccProv'])->first();
         $this->data['DeathProv'] = location::where("LOC_CODE",$this->data['row']['DeathProv'])->first();
 
+
+        //Convert Dead Date
+        $deadDate = $this->data['row']['DeadDate'];
+        $dead_date = Carbon::createFromFormat('Y-m-d', $deadDate);
+        $dead_date = $dead_date->subYear(543);
+        $this->data['row']['DeadDate'] = $dead_date->format('Y-m-d');
+
+        //Convert Birth Date
+        $birthDate = $this->data['row']['BirthDate'];
+        $birth_date = Carbon::createFromFormat('Y-m-d', $birthDate);
+        $birth_date = $birth_date->subYear(543);
+//        dd($birth_date);
+        $this->data['row']['BirthDate'] = $birth_date->format('Y-m-d');
 
         $location = location::all();
         $this->data['location'] = $location;
@@ -150,7 +165,8 @@ class DeadconsoController extends Controller {
 		}
 	}
 	function store( Request $request  )
-	{$this->checkAuth();
+	{
+	    $this->checkAuth();
 	    $url = $request->input('url');
 
 		$task = $request->input('action_task');
@@ -174,10 +190,12 @@ class DeadconsoController extends Controller {
 
                     if($dead_date->year < 2030 ){
                         $data['DeadDate'] = $dead_date->addYear(543);
+                        $data['DeadDate'] = $dead_date->format('Y-m-d');
                     }
 
                     if($birth_date->year < 2030 ){
                         $data['BirthDate'] = $birth_date->addYear(543);
+                        $data['BirthDate'] = $birth_date->format('Y-m-d');
                     }
 
                     $upload_name = Auth::user()->first_name." ".Auth::user()->last_name;
@@ -186,8 +204,14 @@ class DeadconsoController extends Controller {
                     $data['upload_by'] = $upload_id;
                     $data['upload_name'] = $upload_name;
                     $data['IS_UPLOAD'] = "Y";
+                    $data['IS_UPLOAD'] = "Y";
+
+                    $data['road_type'] = $request->road_type;
+                    $data['road_department'] = $request->road_department;
+                    $data['risk'] = $request->risk;
 
 
+//                    dd($data);
 					$id = $this->model->insertRow($data , $request->input( $this->info['key']));
 
 					/* Insert logs */
