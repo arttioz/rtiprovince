@@ -12,12 +12,51 @@
   <div class="page-content-wrapper no-margin">
 
     <div class="sbox">
+
+        <div class="sbox-title">
+{{--            {!! Form::open(array('url'=>'recovery', 'class'=>'','parsley-validate'=>'','novalidate'=>' ','id'=>'search-form', 'method'=>'get' )) !!}--}}
+{{--            <div class="row">--}}
+{{--                <div class="col-xs-12 col-sm-3 label-search">--}}
+{{--                    <label class="col-xs-12 col-sm-12" for="daterange">ตั้งแต่</label>--}}
+{{--                    <input type="text" class="form-control" name="start" id="startDate" autocomplete="off" value="{{$startdate}}"/>--}}
+{{--                </div>--}}
+{{--                <div class="col-xs-12 col-sm-3 label-search">--}}
+{{--                    <label class="col-xs-12 col-sm-12" for="daterange">ถึง</label>--}}
+{{--                    <input type="text" class="form-control" name="end" id="endDate" autocomplete="off" value="{{$enddate}}"/>--}}
+{{--                </div>--}}
+{{--                <div class="col-xs-12 col-sm-3 label-search">--}}
+{{--                    <label class="col-xs-12 col-sm-12" for="daterange">จังหวัดที่เสียชีวิต</label>--}}
+{{--                    <select name="province_id" id="province_id" class="form-control" required>--}}
+{{--                        <option value="" disabled selected>กรุณาเลือก</option>--}}
+{{--                        @foreach($locations as $location)--}}
+
+{{--                            <option @if($province_id == $location->LOC_CODE) selected @endif--}}
+{{--                            value="{{$location->LOC_CODE}}">--}}
+{{--                                {{$location->LOC_PROVINCE}}--}}
+{{--                            </option>--}}
+{{--                        @endforeach--}}
+{{--                    </select>--}}
+{{--                </div>--}}
+
+{{--                <div class="col-xs-12 col-sm-3 label-search">--}}
+{{--                    <label class="col-xs-12 col-sm-12" for="daterange">เลขที่บัตรประชาชน</label>--}}
+{{--                    <input class="form-control"  type="text" name="citizen_id" value="" placeholder="เลขที่บัตรประชาชน 13 หลัก">--}}
+{{--                </div>--}}
+
+{{--            </div>--}}
+{{--            <div class="row" style="margin-top: 15px !important;">--}}
+{{--                <button id="search-btn" class="btn btn-primary col-xs-12 col-sm-3 pull-right" type="submit"> ค้นหา </button>--}}
+{{--            </div>--}}
+
+{{--            {!! Form::close() !!}--}}
+        </div>
+
       <div class="sbox-title">
-        <h1> {{ $pageTitle }} <small> {{ $pageNote }} </small></h1>
+        <h1> ข้อมูลที่ถูกลบ <small> {{ $pageNote }} </small></h1>
       </div>
       <div class="sbox-content">
 
-          TO DO CREATE TABLE WITH PAGINATION
+{{--          TO DO CREATE TABLE WITH PAGINATION--}}
           <div class="table-responsive">
               <table class="table table-bordered "    >
                   <thead>
@@ -62,7 +101,7 @@
                           <td scope="col">{{$item->AccProv}}</td>
                           <td scope="col">{{$item->DeathProv}}</td>
                           <td scope="col">{{$item->Latlong}}</td>
-                          <td scope="col" style="font-size: 10px">{{$item->Source}}</td>
+                          <td scope="col" style="font-size: 10px">{{$item->upload_name}}</td>
 
                       </tr>
                   @endforeach
@@ -70,6 +109,7 @@
               </table>
 
           </div>
+          {{ $recovery_data->appends(Request::except('page'))->links() }}
       </div>
     </div>
   </div>
@@ -92,6 +132,23 @@
                 window.location = recovery_url;
             }
         });
+
+        $('#startDate').datepicker({
+            language: "th",
+            orientation: "auto left",
+            autoclose: true,
+            todayHighlight: true,
+            format: "yyyy-mm-dd"
+        });
+
+        $('#endDate').datepicker({
+            language: "th",
+            orientation: "auto left",
+            autoclose: true,
+            todayHighlight: true,
+            format: "yyyy-mm-dd"
+        });
+
     });
 
 </script>

@@ -1,6 +1,7 @@
 <?php namespace App\Http\Controllers;
 
 use App\Models\deathdata;
+use App\Models\location;
 use App\Models\Recoverydata;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -56,10 +57,73 @@ class RecoverydataController extends Controller {
 	public function index(Request $request)
 	{
         $this->checkAuth();
-//        $deaths = deathdata::query();
+
+//        $start = $request->input('start');
+//        $end = $request->input('end');
+//
+//        if($start && $end){
+//            $dateStart =  Carbon::createFromFormat('Y-m-d', date($start));
+//            $dateEnd =  Carbon::createFromFormat('Y-m-d', date($end));
+//        }else{
+//            $dateStart = Carbon::now()->startOfMonth();
+//            $dateEnd =  Carbon::now();
+//        }
+//
+//
+//        $locations = location::all();
+//        if( Auth::user()->group_id == 3){
+//            $province_id =  Auth::user()->province_id;
+//            $this->data['locations'] = location::where("LOC_CODE",$province_id)->get();
+//
+//        }else {
+//            $province_id = $request->input('province_id');
+//            $this->data['locations'] = $locations;
+//        }
+//
+//        $citizen_id = $request->input('citizen_id');
+//
+//        $this->data['startdate'] = $dateStart->format('Y-m-d');
+//        $this->data['enddate'] = $dateEnd->format('Y-m-d');
+//
+//        $dateStart = $dateStart->addYear(543)->subDay(1);
+//        $dateEnd = $dateEnd->addYear(543);
+
         $deaths = deathdata::withTrashed()->whereNotNull("deleted_at");
+
+//        $deaths = $deaths->whereBetween('DeadDate', [$dateStart, $dateEnd]);
+
+//        if($province_id){
+//            $deaths = $deaths->where(
+//                function($query) use ($province_id) {
+//                    $query->where('dead_conso.AccProv', '=', $province_id)
+//                        ->orWhere('dead_conso.DeathProv', '=', $province_id);
+//                });
+//        }
+//
+//        if(strlen($citizen_id) > 0){
+//            $deaths = $deaths->where('DrvSocNO', $citizen_id);
+//        }
+
         $deaths = $deaths->paginate(10);
+//
+//        $location_arr = [];
+//        foreach ($locations as $location){
+//            $location_arr[$location->LOC_CODE] = $location->LOC_PROVINCE;
+//        }
+//        foreach ($deaths as $row){
+//
+//            if (array_key_exists($row->AccProv,$location_arr)){
+//                $row->AccProv = $location_arr[$row->AccProv] ;
+//            }
+//
+//            if (array_key_exists($row->DeathProv,$location_arr)){
+//                $row->DeathProv = $location_arr[$row->DeathProv] ;
+//            }
+//        }
+
+//        $this->data['province_id'] = $province_id;
         $this->data['recovery_data'] = $deaths;
+
 		return view('recoverydata.index',$this->data);
 	}
 	function show(Request $request, $id = null)
@@ -84,12 +148,11 @@ class RecoverydataController extends Controller {
 	public function recovery(Request $request)
     {
         $this->checkAuth();
-
+//        dd($request);
         $return_url = $request->input('return');
-
         $id = $request->input('id');
-        deathdata::withTrashed()->where("id",$id)->restore();
 
+        deathdata::withTrashed()->where("id",$id)->restore();
         return redirect( $return_url )->with('message',__('core.note_success'))->with('status','success');
     }
 
