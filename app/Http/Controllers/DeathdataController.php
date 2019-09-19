@@ -59,7 +59,6 @@ class DeathdataController extends Controller {
 
     public function index( Request $request )
     {
-
         $this->checkAuth();
         $start = $request->input('start');
         $end = $request->input('end');
@@ -101,7 +100,7 @@ class DeathdataController extends Controller {
             $district_code =  Auth::user()->district_code;
             $district_province = location::where('HEALTH_DISTRICT',$district_code)->pluck('LOC_CODE');
             $deaths = deathdata::query();
-            $deaths = $deaths->whereIn("AccProv",$district_province);
+            $deaths = $deaths->whereIn("AccProv",$district_province)->whereNull("deleted_at");
             $deaths = $deaths->whereBetween('DeadDate', [$dateStart, $dateEnd]);
 
         }else if(Auth::user()->user_level == "2") {

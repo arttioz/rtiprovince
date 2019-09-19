@@ -58,6 +58,7 @@ class RecoverydataController extends Controller {
 	{
         $this->checkAuth();
 
+
 //        $start = $request->input('start');
 //        $end = $request->input('end');
 //
@@ -87,8 +88,20 @@ class RecoverydataController extends Controller {
 //
 //        $dateStart = $dateStart->addYear(543)->subDay(1);
 //        $dateEnd = $dateEnd->addYear(543);
+        if (Auth::user()->user_level == "1") {
+            $district_code =  Auth::user()->district_code;
+            $district_province = location::where('HEALTH_DISTRICT',$district_code)->pluck('LOC_CODE');
+            $deaths = deathdata::whereIn("AccProv",$district_province)->withTrashed()->whereNotNull("deleted_at");
+        } else {
+            $user_province_id =  Auth::user()->province_id;
+            if ($user_province_id == null) {
+                Auth::logout();
+                return redirect('user/login')->with(['message'=>'บัญชีนี้เป็นบัญชีผู้ใช้ที่ก่า กรุณาสมัครใหม่หรือติดต่อเจ้าหน้าที่เพื่อเข้าสู่ระบบ','status'=>'error']);
+            } else {
+                $deaths = deathdata::where('AccProv', $user_province_id)->withTrashed()->whereNotNull("deleted_at");
+            }
+        }
 
-        $deaths = deathdata::withTrashed()->whereNotNull("deleted_at");
 
 //        $deaths = $deaths->whereBetween('DeadDate', [$dateStart, $dateEnd]);
 
