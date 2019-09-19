@@ -255,7 +255,7 @@ abstract class Controller extends BaseController {
 	{
 		if(count($forms) <= 0)
 			$forms = $this->info['config']['forms'];
-		
+
 		$rules = array();
 		foreach($forms as $form)
 		{
@@ -333,7 +333,7 @@ abstract class Controller extends BaseController {
 					}
 				} 
 			}							
-		}	
+		}
 		return $rules ;
 
 
@@ -352,7 +352,7 @@ abstract class Controller extends BaseController {
     }
 
 	function validatePost(  $request )
-	{	
+	{
 		$str = $this->info['config']['forms'];
 		$data = array();
 		foreach($str as $f){
@@ -574,7 +574,7 @@ abstract class Controller extends BaseController {
 		foreach($data as $key=>$val)
 		{
 			if($val !='') $values[$key] = $val;
-		}			
+		}
 		return $values;
 
 	}
@@ -1063,7 +1063,7 @@ function detailviewsave( $model ,$request , $detail , $id )
 			$this->data['prevnext'] = $this->model->prevNext($id);
 			$this->data['setting'] 		= $this->info['setting']; 
 			
-		}  
+		}
 		return $this->data;
 	}
 

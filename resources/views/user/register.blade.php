@@ -36,6 +36,37 @@
     </div>
 
     <div class="form-group has-feedback">
+        <select name="user_level" class="form-control" required id="userlevel">
+            <option value="" disabled selected>เลือกระดับผู้ใช้</option>
+            @foreach($userslevel as $userlevel)
+
+                <option value="{{$userlevel->id}}">
+                    {{$userlevel->name}}
+                </option>
+            @endforeach
+        </select>
+    </div>
+
+    <div class="form-group has-feedback" style="display: none" id="showDistrict">
+        <select name="district_code" id="select_district" class="form-control">
+            <option value="" disabled selected>เลือกระดับเขต</option>
+            <option value="01">เขต 1</option>
+            <option value="02">เขต 2</option>
+            <option value="03">เขต 3</option>
+            <option value="04">เขต 4</option>
+            <option value="05">เขต 5</option>
+            <option value="06">เขต 6</option>
+            <option value="07">เขต 7</option>
+            <option value="08">เขต 8</option>
+            <option value="09">เขต 9</option>
+            <option value="10">เขต 10</option>
+            <option value="11">เขต 11</option>
+            <option value="12">เขต 12</option>
+            <option value="13">สปคม</option>
+        </select>
+    </div>
+
+    <div class="form-group has-feedback">
 
         <select name="department_id" class="form-control" required>
             <option value="" disabled selected>สังกัดหน่วยงาน</option>
@@ -46,6 +77,8 @@
                 </option>
             @endforeach
         </select>
+
+
     </div>
 
 
@@ -53,12 +86,10 @@
         <input name="section" type="text" class="form-control" placeholder="ชื่อหน่วยงาน"  value="" required>
     </div>
 
-    <div class="form-group has-feedback">
-
-        <select name="province_id" id="select_province" class="form-control" required>
+    <div class="form-group has-feedback" style="display: none;" id="showProvince">
+        <select name="province_id" id="select_province"  class="form-control">
             <option value="" disabled selected>จังหวัดของหน่วยงาน</option>
             @foreach($locations as $location)
-
                 <option value="{{$location->LOC_CODE}}">
                     {{$location->LOC_PROVINCE}}
                 </option>
@@ -105,9 +136,42 @@
     {!! Form::close() !!}
 
     <script type="text/javascript">
+
+        var selectLevel;
         $(document).ready(function(){
+
+            selectLevel = $("#userlevel");
+            // $("#select_district").hide();
+            // $('#select_province').hidden;
+
+            setupView();
+            setupUserLevelView();
+
+        })
+
+        function setupView() {
             $('#register-form').parsley();
             $('#select_province').select2();
-        })
+        }
+
+        function setupUserLevelView() {
+            selectLevel.change(function () {
+                let val = selectLevel.val()
+                if(val == 1){
+                    console.log("showDistrict")
+                    document.getElementById("showProvince").style.display = "none";
+                    document.getElementById("showDistrict").style.display = "block";
+                    $("#select_district").attr('required', '');
+                    $("#select_province").removeAttr('required');
+                }else {
+                    console.log("showProvince")
+                    document.getElementById("showProvince").style.display = "block";
+                    document.getElementById("showDistrict").style.display = "none";
+                    $("#select_province").attr('required', '');
+                    $("#select_district").removeAttr('required');
+                }
+            })
+        }
+
     </script>
 @stop

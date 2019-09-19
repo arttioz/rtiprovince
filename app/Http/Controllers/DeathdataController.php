@@ -59,8 +59,8 @@ class DeathdataController extends Controller {
 
     public function index( Request $request )
     {
-        $this->checkAuth();
 
+        $this->checkAuth();
         $start = $request->input('start');
         $end = $request->input('end');
 
@@ -91,11 +91,35 @@ class DeathdataController extends Controller {
         $dateStart = $dateStart->addYear(543)->subDay(1);
         $dateEnd = $dateEnd->addYear(543);
 
-        $deaths = deathdata::query();
-        $deaths = $deaths->whereNull("deleted_at");
+//        $deaths = deathdata::query();
+//        $deaths = $deaths->whereNull("deleted_at");
+//
+//        $deaths = $deaths->whereBetween('DeadDate', [$dateStart, $dateEnd]);
 
-        $deaths = $deaths->whereBetween('DeadDate', [$dateStart, $dateEnd]);
+        if (Auth::user()->user_level == "1") {
 
+            $district_code =  Auth::user()->district_code;
+            $district_province = location::where('HEALTH_DISTRICT',$district_code)->pluck('LOC_CODE');
+            $deaths = deathdata::query();
+            $deaths = $deaths->whereIn("AccProv",$district_province);
+            $deaths = $deaths->whereBetween('DeadDate', [$dateStart, $dateEnd]);
+
+        }else if(Auth::user()->user_level == "2") {
+
+            $user_province_id =  Auth::user()->province_id;
+            if ($user_province_id == null) {
+                Auth::logout();
+                return redirect('user/login')->with(['message'=>'บัญชีนี้เป็นบัญชีผู้ใช้ที่ก่า กรุณาสมัครใหม่หรือติดต่อเจ้าหน้าที่เพื่อเข้าสู่ระบบ','status'=>'error']);
+            } else {
+                $deaths = deathdata::query();
+                $deaths = $deaths->where('AccProv', $user_province_id)->whereNull("deleted_at");
+                $deaths = $deaths->whereBetween('DeadDate', [$dateStart, $dateEnd]);
+            }
+
+        }else {
+            Auth::logout();
+            return redirect('user/login')->with(['message'=>'บัญชีนี้เป็นบัญชีผู้ใช้ที่ก่า กรุณาสมัครใหม่หรือติดต่อเจ้าหน้าที่เพื่อเข้าสู่ระบบ','status'=>'error']);
+        }
 
         if($province_id){
             $deaths = $deaths->where(
@@ -264,6 +288,7 @@ class DeathdataController extends Controller {
                         'upload_by' => $upload_id,
                         'IS_UPLOAD' => "Y",
                         'upload_name' => $upload_name,
+                        'Sex' => $value->sex,
                     ];
                 }
             }

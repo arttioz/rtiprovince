@@ -3,6 +3,7 @@
 use App\Http\Controllers\Controller;
 use App\Models\department;
 use App\Models\location;
+use App\Models\userslevel;
 use App\User;
 use App\Libary\SiteHelpers;
 use Socialize;
@@ -33,18 +34,21 @@ class UserController extends Controller {
 
             $this->data['departments'] = department::all();
             $this->data['locations'] = location::all();
+            $this->data['userslevel'] = userslevel::all();
 
 				$this->data['socialize'] =  config('services');
 				return view('user.register', $this->data);  
 		 endif ;        
 	}
 	public function postCreate( Request $request) {
-	
+//	    dd($request);
 		$rules = array(
 //			'username'=>'required|alpha|between:3,12|unique:tb_users',
 			'firstname'=>'required|min:2',
 			'lastname'=>'required|min:2',
 			'section'=>'required|min:1',
+            'user_level'=>'required|alpha_num|min:1', //ระดับ User
+            'district_code'=>'required|alpha_num|min:1',
 			'department_id'=>'required|alpha_num|min:1',
 			'province_id'=>'required|alpha_num|min:1',
 			'lastname'=>'required|alpha_num|min:2',
@@ -99,6 +103,8 @@ class UserController extends Controller {
 			$authen->first_name = $request->input('firstname');
 			$authen->last_name = $request->input('lastname');
 			$authen->email = trim($request->input('email'));
+            $authen->user_level = $request->input('user_level');
+            $authen->district_code = $request->input('district_code');
 			$authen->activation = $code;
 			$authen->avatar = $avatar_name;
 			$authen->section = $request->input('section');
@@ -201,7 +207,7 @@ class UserController extends Controller {
 	}
 
 	public function postSignin( Request $request) {
-		
+
 		$rules = array(
 			'email'=>'required',
 			'password'=>'required',
@@ -227,12 +233,14 @@ class UserController extends Controller {
 				\Auth::attempt(array('username'=>$request->input('email'), 'password'=> $request->input('password') ), $remember )
 
 			) {
-				if(\Auth::check())
+				if(\Auth::check()) //กรณี login ผ่าน
 				{
-					$row = User::find(\Auth::user()->id); 	
+				    //get db
+					$row = User::find(\Auth::user()->id);
+
+                    //check user  ผ่านการยืนยัน/ติดแบน/ผ่านการยืนยันแล้ว
 					if($row->active =='Inactive')
 					{
-						// inactive 
 						if($request->ajax() == true )
 						{
 							return response()->json(['status' => 'error', 'message' => 'Your Account is not active']);
@@ -241,9 +249,9 @@ class UserController extends Controller {
 							return redirect('user/login')->with(['status' => 'error', 'message' => 'Your Account is not active']);
 						}
 						
-					} else if($row->active=='Banned')
+					}
+					else if($row->active=='Banned')
 					{
-
 						if($request->ajax() == true )
 						{
 							return response()->json(['status' => 'error', 'message' => 'Your Account is BLocked']);
@@ -252,7 +260,10 @@ class UserController extends Controller {
 							\Auth::logout();
 							return redirect('user/login')->with(['status' => 'error', 'message' => 'Your Account is BLocked']);
 						}
-					} else {
+					}
+
+					//กรณีผ่านการยืนยันตัวตน
+					else {
 						\DB::table('tb_users')->where('id', '=',$row->id )->update(array('last_login' => date("Y-m-d H:i:s")));
 						$level = 99;
 						$sql = \DB::table('tb_groups')->where('group_id' , $row->group_id )->get();
@@ -303,7 +314,7 @@ class UserController extends Controller {
 				}		
 				
 			} 
-			else {
+			else { // กรณี login ไม่ผ่าน
 
 				if($request->ajax() == true )
 				{

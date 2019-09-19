@@ -37,8 +37,13 @@ Route::resource('recoverydata','RecoverydataController');
 // End Routes for recoverydata 
 
                     
-// Start Routes for usersdemo 
-Route::resource('usersdemo','UsersdemoController');
-// End Routes for usersdemo 
+// Start Routes for userslevel 
+Route::resource('userslevel','UserslevelController');
+// End Routes for userslevel 
+
+                    
+// Start Routes for deadconsohistory 
+Route::resource('deadconsohistory','DeadconsohistoryController');
+// End Routes for deadconsohistory 
 
                     ?>

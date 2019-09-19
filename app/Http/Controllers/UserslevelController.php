@@ -1,28 +1,28 @@
 <?php namespace App\Http\Controllers;
 
-use App\Models\Usersdemo;
+use App\Models\Userslevel;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Validator, Input, Redirect ; 
 
 
-class UsersdemoController extends Controller {
+class UserslevelController extends Controller {
 
 	protected $layout = "layouts.main";
 	protected $data = array();	
-	public $module = 'usersdemo';
+	public $module = 'userslevel';
 	static $per_page	= '10';
 
 	public function __construct()
 	{		
 		parent::__construct();
-		$this->model = new Usersdemo();	
+		$this->model = new Userslevel();	
 		
 		$this->info = $this->model->makeInfo( $this->module);	
 		$this->data = array(
 			'pageTitle'	=> 	$this->info['title'],
 			'pageNote'	=>  $this->info['note'],
-			'pageModule'=> 'usersdemo',
+			'pageModule'=> 'userslevel',
 			'return'	=> self::returnUrl()
 			
 		);
@@ -173,8 +173,8 @@ class UsersdemoController extends Controller {
 	public static function display(  )
 	{
 		$mode  = isset($_GET['view']) ? 'view' : 'default' ;
-		$model  = new Usersdemo();
-		$info = $model::makeInfo('usersdemo');
+		$model  = new Userslevel();
+		$info = $model::makeInfo('userslevel');
 		$data = array(
 			'pageTitle'	=> 	$info['title'],
 			'pageNote'	=>  $info['note']			
@@ -188,7 +188,7 @@ class UsersdemoController extends Controller {
 				$data['row'] =  $row;
 				$data['fields'] 		=  \SiteHelpers::fieldLang($info['config']['grid']);
 				$data['id'] = $id;
-				return view('usersdemo.public.view',$data);			
+				return view('userslevel.public.view',$data);			
 			}			
 		} 
 		else {
@@ -212,7 +212,7 @@ class UsersdemoController extends Controller {
 			$pagination->setPath('');
 			$data['i']			= ($page * $params['limit'])- $params['limit']; 
 			$data['pagination'] = $pagination;
-			return view('usersdemo.public.index',$data);	
+			return view('userslevel.public.index',$data);	
 		}
 
 	}
