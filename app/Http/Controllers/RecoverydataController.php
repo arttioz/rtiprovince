@@ -136,6 +136,7 @@ class RecoverydataController extends Controller {
 
 //        $this->data['province_id'] = $province_id;
         $this->data['recovery_data'] = $deaths;
+        $this->data['user_level'] = Auth::user()->user_level;
 
 		return view('recoverydata.index',$this->data);
 	}

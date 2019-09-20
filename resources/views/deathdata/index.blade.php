@@ -51,7 +51,7 @@
 
 
                 <div class="sbox-content">
-                    <div class="row" style="margin: 10px">
+                    <div class="row" @if($user_level == 1) style="display: none" @else style="margin: 10px" @endif>
                         <span class="col-xs-3 col-sm-3 col-md-2"> จำนวนข้อมูล: {{$deaths->total()}} </span>
                         <button id="export-btn"  style="margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="button">
                             Download ข้อมูล
@@ -76,8 +76,8 @@
                         <table class="table table-bordered "    >
                             <thead>
                             <tr>
-                                <th scope="col"></th>
-                                <th scope="col">#</th>
+                                <th scope="col">ไอดี</th>
+                                <th scope="col" @if($user_level == 1) style="display: none" @endif>#</th>
                                 <th scope="col">คำนำหน้าชื่อ</th>
                                 <th scope="col">ชื่อจริง</th>
                                 <th scope="col">นามสกุล</th>
@@ -100,7 +100,7 @@
                             @foreach($deaths  as $death)
 
                                 <tr>
-                                    <td scope="col">
+                                    <td scope="col" @if($user_level == 1) style="display: none" @endif>
                                         <a href="{{url("deadconso")."/".$death->id."/edit?return=". urlencode( url()->full() ) }}" style="color: #0e0e0e">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </a>
@@ -151,8 +151,13 @@
     </style>
 
     <script>
-
-
+        {{--$(document).ready(function(){--}}
+        {{--    var user_level_id = '{{$user_level}}';--}}
+        {{--    var count = 1;--}}
+        {{--    if (user_level_id == 1) {--}}
+        {{--        document.getElementById("icons").style.display = "none";--}}
+        {{--    }--}}
+        {{--});--}}
 
         $('#export-btn').click(function () {
 
@@ -206,6 +211,7 @@
                 todayHighlight: true,
                 format: "yyyy-mm-dd"
             });
+
         });
     </script>
 @stop

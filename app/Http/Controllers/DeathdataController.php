@@ -95,7 +95,8 @@ class DeathdataController extends Controller {
 //
 //        $deaths = $deaths->whereBetween('DeadDate', [$dateStart, $dateEnd]);
 
-        if (Auth::user()->user_level == "1") {
+        //Check User level
+        if (Auth::user()->user_level == "1") { //User ระดับเขต
 
             $district_code =  Auth::user()->district_code;
             $district_province = location::where('HEALTH_DISTRICT',$district_code)->pluck('LOC_CODE');
@@ -103,7 +104,7 @@ class DeathdataController extends Controller {
             $deaths = $deaths->whereIn("AccProv",$district_province)->whereNull("deleted_at");
             $deaths = $deaths->whereBetween('DeadDate', [$dateStart, $dateEnd]);
 
-        }else if(Auth::user()->user_level == "2") {
+        }else if(Auth::user()->user_level == "2") { //User ระดับจังหวัด
 
             $user_province_id =  Auth::user()->province_id;
             if ($user_province_id == null) {
@@ -157,7 +158,7 @@ class DeathdataController extends Controller {
         $this->data['deaths'] = $deaths;
 //        $this->data['daterange'] = $daterange;
         $this->data['province_id'] = $province_id;
-
+        $this->data['user_level'] = Auth::user()->user_level;
         return view('deathdata.index',$this->data);
     }
 

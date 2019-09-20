@@ -84,7 +84,7 @@
                   <tbody>
                   @foreach($recovery_data as $item)
                       <tr>
-                          <td scope="col" ><button class="recovery-btn"  data="{{$item->id}}"><i class="fa fa-refresh" aria-hidden="true"></i></button></td>
+                          <td scope="col" @if($user_level == 1) style="display: none" @endif><button class="recovery-btn"  data="{{$item->id}}"><i class="fa fa-refresh" aria-hidden="true"></i></button></td>
                           <td scope="col">{{$item->id}}</td>
                           <td scope="col">{{$item->Prefix}}</td>
                           <td scope="col">{{$item->Fname}}</td>
