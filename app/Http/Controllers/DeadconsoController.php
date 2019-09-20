@@ -2,6 +2,7 @@
 
 use App\Models\Deadconso;
 use App\Models\location;
+use App\Models\deadconsohistory;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
@@ -168,7 +169,6 @@ class DeadconsoController extends Controller {
 	{
 	    $this->checkAuth();
 	    $url = $request->input('url');
-
 		$task = $request->input('action_task');
 		switch ($task)
 		{
@@ -210,17 +210,44 @@ class DeadconsoController extends Controller {
                     $data['road_department'] = $request->road_department;
                     $data['risk'] = $request->risk;
 
-
-//                    dd($data);
 					$id = $this->model->insertRow($data , $request->input( $this->info['key']));
 
-					/* Insert logs */
+                    //Save Data Edit History
+                    $deadconsohistory = new deadconsohistory();
+                    $deadconsohistory['id_dead_conso'] = $request->id;
+                    $deadconsohistory['DEAD_CONSO_ID'] = $request->DEAD_CONSO_ID;
+                    $deadconsohistory['DEAD_YEAR'] = $request->DEAD_YEAR;
+                    $deadconsohistory['Fname'] = $request->Fname;
+                    $deadconsohistory['Lname'] = $request->Lname;
+                    $deadconsohistory['Prefix'] = $request->Prefix;
+                    $deadconsohistory['DrvSocNO'] = $request->DrvSocNO;
+                    $deadconsohistory['Age'] = $request->Age;
+                    $deadconsohistory['Sex'] = $request->Sex;
+                    $deadconsohistory['BirthDate'] = $request->BirthDate;
+                    $deadconsohistory['DeadDate'] = $request->DeadDate;
+                    $deadconsohistory['AccSubDist'] = $request->AccSubDist;
+                    $deadconsohistory['AccDist'] = $request->AccDist;
+                    $deadconsohistory['AccProv'] = $request->AccProv;
+                    $deadconsohistory['AccLatlong'] = $request->AccLatlong;
+                    $deadconsohistory['Acclong'] = $request->Acclong;
+                    $deadconsohistory['NCAUSE'] = $request->NCAUSE;
+                    $deadconsohistory['DeathProv'] = $request->DeathProv;
+                    $deadconsohistory['Vehicle'] = $request->Vehicle;
+                    $deadconsohistory['upload_by'] = $request->upload_by;
+                    $deadconsohistory['upload_name'] = $request->upload_name;
+                    $deadconsohistory['IS_UPLOAD'] = $request->IS_UPLOAD;
+                    $deadconsohistory['road_type'] = $request->road_type;
+                    $deadconsohistory['road_department'] = $request->road_department;
+                    $deadconsohistory['risk'] = $request->risk;
+                    $deadconsohistory->save();
+
+                    /* Insert logs */
 					$this->model->logs($request , $id);
 					if(!is_null($request->input('apply')))
 						return redirect( $this->module .'/'.$id.'/edit?'. $this->returnUrl() )->with('message',__('core.note_success'))->with('status','success');
 
 					return redirect( $url )->with('message',__('core.note_success'))->with('status','success');
-				} 
+                }
 				else {
 					return redirect($this->module.'/'. $request->input(  $this->info['key'] ).'/edit')
 							->with('message',__('core.note_error'))->with('status','error')

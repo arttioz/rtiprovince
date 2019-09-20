@@ -101,11 +101,11 @@
 
                                 <tr>
                                     <td scope="col">
-                                        <a href="{{url("deadconso")."/".$death->id."/edit?return=". urlencode( url()->full() ) }}">
+                                        <a href="{{url("deadconso")."/".$death->id."/edit?return=". urlencode( url()->full() ) }}" style="color: #0e0e0e">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </a>
                                         <i data="{{$death->id}}" class="fa fa-trash delete-button" aria-hidden="true"></i>
-                                        <a href="{{url("deadconsohistory")."?id=".$death->id}}">
+                                        <a href="{{url("deadconsohistory")."?id=".$death->id}}" style="color: #0e0e0e">
                                             <i class="fa fa-history" aria-hidden="true"></i>
                                         </a>
 

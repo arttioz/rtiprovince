@@ -570,7 +570,7 @@
 
 					<div class="sbox-tools pull-right" >
 						{{--<button name="apply" class="tips btn btn-sm btn-default  "  title="{{ __('core.btn_back') }}" ><i class="fa  fa-check"></i> {{ __('core.sb_apply') }} </button>--}}
-						<button name="save" class="tips btn btn-sm btn-primary"  title="{{ __('core.btn_back') }}" ><i class="fa  fa-paste"></i> บันทึก </button>
+						<button name="save" class="tips btn btn-sm btn-primary c"  title="{{ __('core.btn_back') }}" ><i class="fa  fa-paste"></i> บันทึก </button>
 					</div>
 				</div>
 
@@ -867,6 +867,20 @@
 				}
 			});
 
+			var url = '{{url("deadconsohistory")}}';
+
+			$('.save-form').click(function () {
+				var data = $('form').serialize();
+				console.log(data)
+				var id = $(this).attr("data");
+				var delete_url = url + "?id=" + id + "&return=" + returnURL;
+
+				var retVal = confirm("Do you want to continue ?");
+				if( retVal == true ) {
+					window.location = delete_url;
+				}
+			});
+
             $('.removeMultiFiles').on('click',function(){
                 var removeUrl = '{{ url("deadconso/removefiles?file=")}}'+$(this).attr('url');
                 $(this).parent().remove();
@@ -884,7 +898,6 @@
 					$('#Age').val(age);
 				})
 			});
-
 
 			$('#Age').keyup(function () {
 				$('#BirthDate').val("");

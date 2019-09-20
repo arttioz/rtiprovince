@@ -69,7 +69,6 @@ class DeadconsohistoryController extends Controller {
 //        $deadconsohistorys = $deadconsohistorys->paginate(10);
 
         $this->data['deadconsohistorys'] = $deadconsohistorys;
-
         return view($this->module.'.index',$this->data);
 	}
 
@@ -265,4 +264,5 @@ class DeadconsohistoryController extends Controller {
 		}	
 	
 	}
+
 }

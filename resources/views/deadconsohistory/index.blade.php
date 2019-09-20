@@ -70,7 +70,7 @@
 					<table class="table table-bordered "    >
 						<thead>
 						<tr>
-							<th scope="col"></th>
+{{--							<th scope="col"></th>--}}
 							<th scope="col">ไอดี</th>
 							<th scope="col">คำนำหน้าชื่อ</th>
 							<th scope="col">ชื่อจริง</th>
@@ -87,14 +87,13 @@
 							<th scope="col">จังหวัดที่เกิดเหตุ</th>
 							<th scope="col">จังหวัดที่ตาย</th>
 							<th scope="col">Lat,Long</th>
-							<th scope="col" >แหล่งที่มา</th>
 						</tr>
 						</thead>
 
 						<tbody>
 						@foreach($deadconsohistorys as $item)
 							<tr>
-								<td scope="col" ><i class="fa fa-history" aria-hidden="true"></i></td>
+{{--								<td scope="col" ><i class="fa fa-history" aria-hidden="true"></i></td>--}}
 								<td scope="col">{{$item->id}}</td>
 								<td scope="col">{{$item->Prefix}}</td>
 								<td scope="col">{{$item->Fname}}</td>
@@ -111,7 +110,6 @@
 								<td scope="col">{{$item->AccProv}}</td>
 								<td scope="col">{{$item->DeathProv}}</td>
 								<td scope="col">{{$item->AccLatlong}},<br>{{$item->Acclong}}</td>
-								<td scope="col" style="font-size: 10px">{{$item->upload_name}}</td>
 
 							</tr>
 						@endforeach

@@ -88,7 +88,6 @@ Route::get('exportdata', 'DeathdataController@export');
 Route::post('importdata', 'DeathdataController@store');
 Route::get('template', 'DeathdataController@downloadTemplate');
 Route::get('deletedata', 'DeathdataController@destroy');
-
 Route::get('recovery', 'RecoverydataController@recovery');
 
 Route::get('deadconsohistory/{id}', 'Deadconsohistory@index');
