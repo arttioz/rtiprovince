@@ -28,7 +28,7 @@
 			<!-- Toolbar Top -->
 
 			<div class="row">
-				<div class="col-md-4">
+{{--				<div class="col-md-4">--}}
 {{--					@if($access['is_add'] ==1)--}}
 {{--					<a href="{{ url('deadconsohistory/create?return='.$return) }}" class="btn btn-default btn-sm"--}}
 {{--						title="{{ __('core.btn_create') }}"><i class=" fa fa-plus "></i> Create New </a>--}}
@@ -53,16 +53,16 @@
 
 {{--				        </ul>--}}
 {{--				    </div>--}}
-				</div>
-				<div class="col-md-4 pull-right">
-					<div class="input-group">
-					      <div class="input-group-btn">
-					        <button type="button" class="btn btn-default btn-sm "
-					        onclick="SximoModal('{{ url($pageModule."/search") }}','Advance Search'); " ><i class="fa fa-filter"></i> Filter </button>
-					      </div><!-- /btn-group -->
-					      <input type="text" class="form-control input-sm onsearch" data-target="{{ url($pageModule) }}" aria-label="..." placeholder=" Type And Hit Enter ">
-					    </div>
-				</div>
+{{--				</div>--}}
+{{--				<div class="col-md-4 pull-right">--}}
+{{--					<div class="input-group">--}}
+{{--					      <div class="input-group-btn">--}}
+{{--					        <button type="button" class="btn btn-default btn-sm "--}}
+{{--					        onclick="SximoModal('{{ url($pageModule."/search") }}','Advance Search'); " ><i class="fa fa-filter"></i> Filter </button>--}}
+{{--					      </div><!-- /btn-group -->--}}
+{{--					      <input type="text" class="form-control input-sm onsearch" data-target="{{ url($pageModule) }}" aria-label="..." placeholder=" Type And Hit Enter ">--}}
+{{--					    </div>--}}
+{{--				</div>--}}
 			</div>
 			<!-- End Toolbar Top -->
 
@@ -71,7 +71,7 @@
 						<thead>
 						<tr>
 {{--							<th scope="col"></th>--}}
-							<th scope="col">ไอดี</th>
+{{--							<th scope="col">ไอดี</th>--}}
 							<th scope="col">คำนำหน้าชื่อ</th>
 							<th scope="col">ชื่อจริง</th>
 							<th scope="col">นามสกุล</th>
@@ -94,7 +94,7 @@
 						@foreach($deadconsohistorys as $item)
 							<tr>
 {{--								<td scope="col" ><i class="fa fa-history" aria-hidden="true"></i></td>--}}
-								<td scope="col">{{$item->id}}</td>
+{{--								<td scope="col">{{$item->id}}</td>--}}
 								<td scope="col">{{$item->Prefix}}</td>
 								<td scope="col">{{$item->Fname}}</td>
 								<td scope="col">{{$item->Lname}}</td>
@@ -116,7 +116,7 @@
 						</tbody>
 					</table>
 				</div>
-{{--				{{ $deadconsohistorys->appends(Request::except('page'))->links() }}--}}
+				{{ $deadconsohistorys->appends(Request::except('page'))->links() }}
 			</div>
 		</div>
 	</div>

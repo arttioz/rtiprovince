@@ -64,7 +64,7 @@ class DeadconsohistoryController extends Controller {
 
         $id = $request->id;
 
-        $deadconsohistorys = deadconsohistory::where('id_dead_conso',$id)->get();
+        $deadconsohistorys = deadconsohistory::where('id_dead_conso',$id)->paginate(10);
 
 //        $deadconsohistorys = $deadconsohistorys->paginate(10);
 
