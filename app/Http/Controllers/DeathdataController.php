@@ -82,8 +82,6 @@ class DeathdataController extends Controller {
             $this->data['locations'] = $locations;
         }
 
-        $citizen_id = $request->input('citizen_id');
-
         $this->data['startdate'] = $dateStart->format('Y-m-d');
         $this->data['enddate'] = $dateEnd->format('Y-m-d');
 
@@ -129,15 +127,12 @@ class DeathdataController extends Controller {
                 });
         }
 
-
-
+        $citizen_id = $request->input('citizen_id');
         if(strlen($citizen_id) > 0){
             $deaths = $deaths->where('DrvSocNO', $citizen_id);
         }
 
         $deaths = $deaths->paginate(10);
-
-
 
 
         $location_arr = [];
