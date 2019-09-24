@@ -1,11 +1,21 @@
 @extends('layouts.app')
 @section('content')
     <section class="page-header row">
-        <h1> {{ $pageTitle }} </h1>
-        {{--<ol class="breadcrumb">--}}
-            {{--<li><a href="#"><i class="fa fa-home"></i> Home</a></li>--}}
-            {{--<li  class="active"> {{ $pageTitle }} </li>--}}
-        {{--</ol>--}}
+        <div id="header-level1">
+            <h1> {{ $pageTitle }} <h4> {{$userslevel_name}}: เขต {{$district_code}}</h4></h1>
+            <ol class="breadcrumb">
+                {{--<li><a href="#"><i class="fa fa-home"></i> Home</a></li>--}}
+                {{--<li  class="active"> {{ $pageTitle }} </li>--}}
+            </ol>
+        </div>
+        <div id="header-level2">
+            <h1> {{ $pageTitle }} <h4> {{$userslevel_name}}: {{$province_id}}</h4></h1>
+            <ol class="breadcrumb">
+                {{--<li><a href="#"><i class="fa fa-home"></i> Home</a></li>--}}
+                {{--<li  class="active"> {{ $pageTitle }} </li>--}}
+            </ol>
+        </div>
+
     </section>
     <div class="page-content row">
         <div class="page-content-wrapper no-margin">
@@ -13,11 +23,11 @@
                 <div class="sbox-title">
                     {!! Form::open(array('url'=>'deathdata', 'class'=>'','parsley-validate'=>'','novalidate'=>' ','id'=>'search-form', 'method'=>'get' )) !!}
                     <div class="row">
-                        <div class="col-xs-12 col-sm-4 label-search">
+                        <div class="col-xs-12 col-sm-2 label-search">
                             <label class="col-xs-12 col-sm-12" for="daterange">ตั้งแต่</label>
                             <input type="text" class="form-control" name="start" id="startDate" autocomplete="off" value="{{$startdate}}"/>
                         </div>
-                        <div class="col-xs-12 col-sm-4 label-search">
+                        <div class="col-xs-12 col-sm-2 label-search">
                             <label class="col-xs-12 col-sm-12" for="daterange">ถึง</label>
                             <input type="text" class="form-control" name="end" id="endDate" autocomplete="off" value="{{$enddate}}"/>
                         </div>
@@ -34,10 +44,17 @@
 {{--                                @endforeach--}}
 {{--                            </select>--}}
 {{--                        </div>--}}
-
+                        <div class="col-xs-12 col-sm-2 label-search">
+                            <label class="col-xs-12 col-sm-12" for="daterange">ชื่อ</label>
+                            <input class="form-control"  type="text" name="Fname" value="{{$Fname}}" placeholder="กรอกชื่อให้ถูกต้อง">
+                        </div>
+                        <div class="col-xs-12 col-sm-2 label-search">
+                            <label class="col-xs-12 col-sm-12" for="daterange">นามสกุล</label>
+                            <input class="form-control"  type="text" name="Lname" value="{{$Lname}}" placeholder="กรอกนามสกุลให้ถูกต้อง">
+                        </div>
                         <div class="col-xs-12 col-sm-4 label-search">
                             <label class="col-xs-12 col-sm-12" for="daterange">เลขที่บัตรประชาชน</label>
-                            <input class="form-control"  type="text" name="citizen_id" value="" placeholder="เลขที่บัตรประชาชน 13 หลัก">
+                            <input class="form-control"  type="text" name="citizen_id" value="{{$citizen_id}}" placeholder="เลขที่บัตรประชาชน 13 หลัก">
                         </div>
 
                     </div>
@@ -151,13 +168,16 @@
     </style>
 
     <script>
-        {{--$(document).ready(function(){--}}
-        {{--    var user_level_id = '{{$user_level}}';--}}
-        {{--    var count = 1;--}}
-        {{--    if (user_level_id == 1) {--}}
-        {{--        document.getElementById("icons").style.display = "none";--}}
-        {{--    }--}}
-        {{--});--}}
+        $(document).ready(function(){
+            var user_level_id = '{{$user_level}}';
+            console.log(user_level_id)
+            if (user_level_id == 1) {
+                document.getElementById("header-level2").style.display = "none";
+            } else {
+                document.getElementById("header-level1").style.display = "none";
+            }
+
+        });
 
         $('#export-btn').click(function () {
 

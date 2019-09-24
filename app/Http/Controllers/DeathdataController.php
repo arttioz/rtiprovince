@@ -2,6 +2,7 @@
 
 use App\Models\Deathdata;
 use App\Models\location;
+use App\Models\userslevel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
@@ -94,13 +95,12 @@ class DeathdataController extends Controller {
 
         //Check User level
         if (Auth::user()->user_level == "1") { //User ระดับเขต
-
             $district_code =  Auth::user()->district_code;
             $district_province = location::where('HEALTH_DISTRICT',$district_code)->pluck('LOC_CODE');
             $deaths = deathdata::query();
             $deaths = $deaths->whereIn("AccProv",$district_province)->whereNull("deleted_at");
             $deaths = $deaths->whereBetween('DeadDate', [$dateStart, $dateEnd]);
-
+            $this->data['district_code'] = $district_code;
         }else if(Auth::user()->user_level == "2") { //User ระดับจังหวัด
 
             $user_province_id =  Auth::user()->province_id;
@@ -126,13 +126,25 @@ class DeathdataController extends Controller {
                 });
         }
 
+        $Fname = $request->input('Fname');
+        if(strlen($Fname) > 0){
+            $deaths = $deaths->where('Fname', $Fname);
+        }
+        $this->data['Fname'] = $Fname;
+
+        $Lname = $request->input('Lname');
+        if(strlen($Lname) > 0){
+            $deaths = $deaths->where('Lname', $Lname);
+        }
+        $this->data['Lname'] = $Lname;
+
         $citizen_id = $request->input('citizen_id');
         if(strlen($citizen_id) > 0){
             $deaths = $deaths->where('DrvSocNO', $citizen_id);
         }
+        $this->data['citizen_id'] = $citizen_id;
 
         $deaths = $deaths->paginate(10);
-
 
         $location_arr = [];
         foreach ($locations as $location){
@@ -149,8 +161,13 @@ class DeathdataController extends Controller {
             }
         }
 
+        //Get name Health District
+
+        $userslevel_names = userslevel::where('id',Auth::user()->user_level)->pluck('name');
+
+
+        $this->data['userslevel_name'] = $userslevel_names[0];
         $this->data['deaths'] = $deaths;
-//        $this->data['daterange'] = $daterange;
         $this->data['province_id'] = $province_id;
         $this->data['user_level'] = Auth::user()->user_level;
         return view('deathdata.index',$this->data);
