@@ -48,9 +48,9 @@ class UserController extends Controller {
 			'lastname'=>'required|min:2',
 			'section'=>'required|min:1',
             'user_level'=>'required|alpha_num|min:1', //ระดับ User
-            'district_code'=>'required|alpha_num|min:1',
+//            'district_code'=>'required|alpha_num|min:1',
 			'department_id'=>'required|alpha_num|min:1',
-			'province_id'=>'required|alpha_num|min:1',
+//			'province_id'=>'required|alpha_num|min:1',
 			'lastname'=>'required|alpha_num|min:2',
 			'email'=>'required|email|unique:tb_users',
 			'password'=>'required|between:4,12|confirmed',

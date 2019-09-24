@@ -156,15 +156,16 @@
 
         function setupUserLevelView() {
             selectLevel.change(function () {
-                let val = selectLevel.val()
+                let val = selectLevel.val();
+                console.log(val)
                 if(val == 1){
-                    console.log("showDistrict")
+                    // console.log("showDistrict");
                     document.getElementById("showProvince").style.display = "none";
                     document.getElementById("showDistrict").style.display = "block";
                     $("#select_district").attr('required', '');
                     $("#select_province").removeAttr('required');
                 }else {
-                    console.log("showProvince")
+                    // console.log("showProvince");
                     document.getElementById("showProvince").style.display = "block";
                     document.getElementById("showDistrict").style.display = "none";
                     $("#select_province").attr('required', '');
