@@ -75,7 +75,6 @@ class RecoverydataController extends Controller {
         if( Auth::user()->group_id == 3){
             $province_id =  Auth::user()->province_id;
             $this->data['locations'] = location::where("LOC_CODE",$province_id)->get();
-
         }else {
             $province_id = $request->input('province_id');
             $this->data['locations'] = $locations;

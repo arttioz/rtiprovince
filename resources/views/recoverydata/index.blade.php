@@ -18,29 +18,29 @@
         <div class="sbox-title">
             {!! Form::open(array('url'=>'recoverydata', 'class'=>'','parsley-validate'=>'','novalidate'=>' ','id'=>'search-form', 'method'=>'get' )) !!}
             <div class="row">
-                <div class="col-xs-12 col-sm-3 label-search">
+                <div class="col-xs-12 col-sm-4 label-search">
                     <label class="col-xs-12 col-sm-12" for="daterange">ตั้งแต่</label>
                     <input type="text" class="form-control" name="start" id="startDate" autocomplete="off" value="{{$startdate}}"/>
                 </div>
-                <div class="col-xs-12 col-sm-3 label-search">
+                <div class="col-xs-12 col-sm-4 label-search">
                     <label class="col-xs-12 col-sm-12" for="daterange">ถึง</label>
                     <input type="text" class="form-control" name="end" id="endDate" autocomplete="off" value="{{$enddate}}"/>
                 </div>
-                <div class="col-xs-12 col-sm-3 label-search">
-                    <label class="col-xs-12 col-sm-12" for="daterange">จังหวัดที่เสียชีวิต</label>
-                    <select name="province_id" id="province_id" class="form-control" required>
-                        <option value="" disabled selected>กรุณาเลือก</option>
-                        @foreach($locations as $location)
+{{--                <div class="col-xs-12 col-sm-3 label-search">--}}
+{{--                    <label class="col-xs-12 col-sm-12" for="daterange">จังหวัดที่เสียชีวิต</label>--}}
+{{--                    <select name="province_id" id="province_id" class="form-control" required>--}}
+{{--                        <option value="" disabled selected>กรุณาเลือก</option>--}}
+{{--                        @foreach($locations as $location)--}}
 
-                            <option @if($province_id == $location->LOC_CODE) selected @endif
-                            value="{{$location->LOC_CODE}}">
-                                {{$location->LOC_PROVINCE}}
-                            </option>
-                        @endforeach
-                    </select>
-                </div>
+{{--                            <option @if($province_id == $location->LOC_CODE) selected @endif--}}
+{{--                            value="{{$location->LOC_CODE}}">--}}
+{{--                                {{$location->LOC_PROVINCE}}--}}
+{{--                            </option>--}}
+{{--                        @endforeach--}}
+{{--                    </select>--}}
+{{--                </div>--}}
 
-                <div class="col-xs-12 col-sm-3 label-search">
+                <div class="col-xs-12 col-sm-4 label-search">
                     <label class="col-xs-12 col-sm-12" for="daterange">เลขที่บัตรประชาชน</label>
                     <input class="form-control"  type="text" name="citizen_id" value="" placeholder="เลขที่บัตรประชาชน 13 หลัก">
                 </div>
