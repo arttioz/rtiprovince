@@ -46,4 +46,24 @@ Route::resource('userslevel','UserslevelController');
 Route::resource('deadconsohistory','DeadconsohistoryController');
 // End Routes for deadconsohistory 
 
+                    
+// Start Routes for rtiprovincefiled 
+Route::resource('rtiprovincefiled','RtiprovincefiledController');
+// End Routes for rtiprovincefiled 
+
+                    
+// Start Routes for typefiled 
+Route::resource('typefiled','TypefiledController');
+// End Routes for typefiled 
+
+                    
+// Start Routes for ritfiled 
+Route::resource('ritfiled','RitfiledController');
+// End Routes for ritfiled 
+
+                    
+// Start Routes for inputtypefield 
+Route::resource('inputtypefield','InputtypefieldController');
+// End Routes for inputtypefield 
+
                     ?>

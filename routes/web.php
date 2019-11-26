@@ -43,7 +43,7 @@ Route::get('posts','HomeController@posts');
 Route::get('posts/{any}','HomeController@posts');
 Route::post('posts/comment','HomeController@comment');
 Route::get('posts/remove/{id?}/{id2?}/{id3?}','HomeController@remove');
-// Start Routes for Notification 
+// Start Routes for Notification
 Route::resource('notification','NotificationController');
 Route::get('home/load','HomeController@getLoad');
 Route::get('home/lang/{any}','HomeController@getLang');
@@ -57,13 +57,13 @@ Route::resource('sximoapi','SximoapiController');
 
 // Routes for  all generated Module
 include('module.php');
-// Custom routes  
+// Custom routes
 $path = base_path().'/routes/custom/';
 $lang = scandir($path);
 foreach($lang as $value) {
-	if($value === '.' || $value === '..') {continue;} 
-	include( 'custom/'. $value );	
-	
+	if($value === '.' || $value === '..') {continue;}
+	include( 'custom/'. $value );
+
 }
 // End custom routes
 Route::group(['middleware' => 'auth'], function () {
@@ -73,9 +73,9 @@ Route::group(['middleware' => 'auth'], function () {
 
 Route::group(['namespace' => 'Sximo','middleware' => 'auth'], function () {
 	// This is root for superadmin
-		
+
 		include('sximo.php');
-		
+
 });
 
 Route::group(['namespace' => 'Core','middleware' => 'auth'], function () {
@@ -91,4 +91,7 @@ Route::get('deletedata', 'DeathdataController@destroy');
 Route::get('recovery', 'RecoverydataController@recovery');
 
 Route::get('deadconsohistory/{id}', 'Deadconsohistory@index');
+
+
+Route::get('save-data/', 'RtiprovincefiledController@save_data');
 

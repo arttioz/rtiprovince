@@ -1,6 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <section class="page-header row">
+        @if($user_level === 1)
         <div id="header-level1">
             <h1> {{ $pageTitle }} <h4> {{$userslevel_name}}: เขต {{$district_code}}</h4></h1>
             <ol class="breadcrumb">
@@ -8,6 +9,8 @@
                 {{--<li  class="active"> {{ $pageTitle }} </li>--}}
             </ol>
         </div>
+        @endif
+        @if($user_level === 1)
         <div id="header-level2">
             <h1> {{ $pageTitle }} <h4> {{$userslevel_name}}: {{$province_id}}</h4></h1>
             <ol class="breadcrumb">
@@ -15,6 +18,7 @@
                 {{--<li  class="active"> {{ $pageTitle }} </li>--}}
             </ol>
         </div>
+        @endif
 
     </section>
     <div class="page-content row">
@@ -117,7 +121,9 @@
                             @foreach($deaths  as $death)
 
                                 <tr>
+                                    {{$user_level}}
                                     <td scope="col" @if($user_level == 1) style="display: none" @endif>
+{{--                                    <td scope="col" @if($user_level == 1) style="display: none" @endif>--}}
                                         <a href="{{url("deadconso")."/".$death->id."/edit?return=". urlencode( url()->full() ) }}" style="color: #0e0e0e">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </a>
@@ -171,10 +177,12 @@
         $(document).ready(function(){
             var user_level_id = '{{$user_level}}';
             console.log(user_level_id)
-            if (user_level_id == 1) {
+            if (user_level_id === 1) {
                 document.getElementById("header-level2").style.display = "none";
-            } else {
+            } else if(user_level_id === 2) {
                 document.getElementById("header-level1").style.display = "none";
+            } else {
+                console.log('Error')
             }
 
         });
