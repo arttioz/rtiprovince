@@ -70,7 +70,13 @@ class DeadconsoController extends Controller {
 			return redirect('dashboard')->with('message', __('core.note_restric'))->with('status','error');
 		// Render into template
 //		return view( $this->module.'.index',$this->data);
-		return redirect( 'deadconso/create?province_id='.$province_id);
+//        dd($province_id);
+//        if ($province_id === '') {
+            return redirect( 'deadconso/create?province_id='.$province_id);
+//        } else {
+//            return redirect( 'deadconso/create?province_id=');
+//        }
+
 	}
 
 	function create( Request $request , $id =0 ){
@@ -91,10 +97,16 @@ class DeadconsoController extends Controller {
                 $province_id = $request->input('province_id');
             }
         }
+//        if (!$province_id) {
+//            $this->data['url'] =  '';
+//            $this->data['AccProv'] = '';
+//            $this->data['DeathProv'] = '';
+//        } else {
+//            $this->data['url'] =  \Illuminate\Support\Facades\Input::get('return');
+//            $this->data['AccProv'] = location::where("LOC_CODE",$province_id)->first();
+//            $this->data['DeathProv'] = location::where("LOC_CODE",$province_id)->first();
+//        }
 
-        $this->data['url'] =  \Illuminate\Support\Facades\Input::get('return');
-        $this->data['AccProv'] = location::where("LOC_CODE",$province_id)->first();
-        $this->data['DeathProv'] = location::where("LOC_CODE",$province_id)->first();
 
         // จัดการตัวแปร
         $rti_provinces = rtiprovincefiled::where('province_code',$request->province_id)
@@ -109,11 +121,13 @@ class DeadconsoController extends Controller {
 
         $location = location::all();
         $this->data['location'] = $location;
-        $this->data['province_id'] = $request->province_id;
+        $this->data['province_id'] = '';
 
 		$this->data['id'] = '';
 		$this->data['rti_field'] = '';
-
+        $this->data['url'] =  \Illuminate\Support\Facades\Input::get('return');
+		$this->data['AccProv'] = [];
+		$this->data['DeathProv'] = [];
 		return view($this->module.'.form',$this->data)->with('rti_provinces', $rti_provinces);
 	}
 	function edit( Request $request , $id ) {
@@ -128,7 +142,9 @@ class DeadconsoController extends Controller {
         $this->data['url'] =  \Illuminate\Support\Facades\Input::get('return');
 		$this->data['AccProv'] = location::where("LOC_CODE",$this->data['row']['AccProv'])->first();
         $this->data['DeathProv'] = location::where("LOC_CODE",$this->data['row']['DeathProv'])->first();
-
+//        dump($this->data['AccProv']);
+//        dump($this->data['DeathProv']);
+//        dd();
 
         //Convert Dead Date
         $deadDate = $this->data['row']['DeadDate'];

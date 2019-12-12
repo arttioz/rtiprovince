@@ -169,6 +169,7 @@ class DeathdataController extends Controller {
         $this->data['deaths'] = $deaths;
         $this->data['province_id'] = $province_id;
         $this->data['user_level'] = Auth::user()->user_level;
+//        dd($this->data['user_level']);
         return view('deathdata.index',$this->data);
         return view('layouts.sidebar',$this->data);
     }
