@@ -24,6 +24,12 @@
 					</tr>
 				
 					<tr>
+						<td width='30%' class='label-view text-right'>{{ SiteHelpers::activeLang('Name Th', (isset($fields['name_th']['language'])? $fields['name_th']['language'] : array())) }}</td>
+						<td>{{ $row->name_th}} </td>
+						
+					</tr>
+				
+					<tr>
 						<td width='30%' class='label-view text-right'>{{ SiteHelpers::activeLang('Type Filed Id', (isset($fields['type_filed_id']['language'])? $fields['type_filed_id']['language'] : array())) }}</td>
 						<td>{{ $row->type_filed_id}} </td>
 						

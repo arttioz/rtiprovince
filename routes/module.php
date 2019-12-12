@@ -57,13 +57,18 @@ Route::resource('typefiled','TypefiledController');
 // End Routes for typefiled 
 
                     
+// Start Routes for inputtypefield 
+Route::resource('inputtypefield','InputtypefieldController');
+// End Routes for inputtypefield 
+
+                    
 // Start Routes for ritfiled 
 Route::resource('ritfiled','RitfiledController');
 // End Routes for ritfiled 
 
                     
-// Start Routes for inputtypefield 
-Route::resource('inputtypefield','InputtypefieldController');
-// End Routes for inputtypefield 
+// Start Routes for deadcosoextra 
+Route::resource('deadcosoextra','DeadcosoextraController');
+// End Routes for deadcosoextra 
 
                     ?>

@@ -63,7 +63,6 @@ class DeathdataController extends Controller {
         $this->checkAuth();
         $start = $request->input('start');
         $end = $request->input('end');
-
         if($start && $end){
             $dateStart =  Carbon::createFromFormat('Y-m-d', date($start));
             $dateEnd =  Carbon::createFromFormat('Y-m-d', date($end));
@@ -72,13 +71,13 @@ class DeathdataController extends Controller {
             $dateEnd =  Carbon::now();
         }
 
-
         $locations = location::all();
         if( Auth::user()->group_id == 3) {
             $province_id =  Auth::user()->province_id;
             $this->data['locations'] = location::where("LOC_CODE",$province_id)->get();
         } else {
-            $province_id = $request->input('province_id');
+//            $province_id = $request->input('province_id');
+            $province_id =  Auth::user()->province_id;
             $this->data['locations'] = $locations;
         }
 
@@ -171,6 +170,7 @@ class DeathdataController extends Controller {
         $this->data['province_id'] = $province_id;
         $this->data['user_level'] = Auth::user()->user_level;
         return view('deathdata.index',$this->data);
+        return view('layouts.sidebar',$this->data);
     }
 
     public function show(Request $request, $id = null)
@@ -207,8 +207,6 @@ class DeathdataController extends Controller {
         $data =  $excel->load($path)->get();
 
         if($data->count()){
-
-
 
             $province_data = null;
             $upload_name = Auth::user()->first_name." ".Auth::user()->last_name;

@@ -1,7 +1,7 @@
 @extends('layouts.app')
 @section('content')
     <section class="page-header row">
-        @if($user_level === 1)
+        @if($user_level === '1')
         <div id="header-level1">
             <h1> {{ $pageTitle }} <h4> {{$userslevel_name}}: เขต {{$district_code}}</h4></h1>
             <ol class="breadcrumb">
@@ -10,12 +10,12 @@
             </ol>
         </div>
         @endif
-        @if($user_level === 1)
+        @if($user_level === '2')
         <div id="header-level2">
             <h1> {{ $pageTitle }} <h4> {{$userslevel_name}}: {{$province_id}}</h4></h1>
             <ol class="breadcrumb">
-                {{--<li><a href="#"><i class="fa fa-home"></i> Home</a></li>--}}
-                {{--<li  class="active"> {{ $pageTitle }} </li>--}}
+                <li><a href="#"><i class="fa fa-home"></i> Home</a></li>
+                <li  class="active"> {{ $pageTitle }} </li>
             </ol>
         </div>
         @endif
@@ -86,7 +86,6 @@
 
                         <button  id="import-btn" style="margin-right: 10px; margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="submit"> Import ข้อมูล </button>
                         {!! Form::close() !!}
-
                         <a href="{{url("deadconso")."/create?province_id=".$province_id."&return=".urlencode( url()->full() )}}">
                             <button id="insert-btn"  style="margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="button">
                                 เพิ่ม ข้อมูล
@@ -121,10 +120,10 @@
                             @foreach($deaths  as $death)
 
                                 <tr>
-                                    {{$user_level}}
+{{--                                    {{$user_level}}--}}
                                     <td scope="col" @if($user_level == 1) style="display: none" @endif>
 {{--                                    <td scope="col" @if($user_level == 1) style="display: none" @endif>--}}
-                                        <a href="{{url("deadconso")."/".$death->id."/edit?return=". urlencode( url()->full() ) }}" style="color: #0e0e0e">
+                                        <a href="{{url("deadconso")."/".$death->id."/edit?province_id=".$province_id."&return=". urlencode( url()->full() ) }}" style="color: #0e0e0e">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </a>
                                         <i data="{{$death->id}}" class="fa fa-trash delete-button" aria-hidden="true"></i>

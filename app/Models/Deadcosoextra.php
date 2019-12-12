@@ -2,12 +2,17 @@
 
 use Illuminate\Auth\Authenticatable;
 use Illuminate\Database\Eloquent\Model;
-use App\Models\typefiled;
 
-class ritfiled extends Sximo  {
+class deadcosoextra extends Sximo  {
 
-	protected $table = 'rti_filed';
+	protected $table = 'dead_coso_extra';
 	protected $primaryKey = 'id';
+    public $fillable = [
+        'province_code',
+        'dead_coso_id',
+        'option_data',
+    ];
+	protected $casts = ['option_data' => 'json'];
 
 	public function __construct() {
 		parent::__construct();
@@ -16,19 +21,16 @@ class ritfiled extends Sximo  {
 
 	public static function querySelect(  ){
 
-		return "  SELECT rti_filed.* FROM rti_filed  ";
+		return "  SELECT dead_coso_extra.* FROM dead_coso_extra  ";
 	}
 
 	public static function queryWhere(  ){
 
-		return "  WHERE rti_filed.id IS NOT NULL ";
+		return "  WHERE dead_coso_extra.id IS NOT NULL ";
 	}
 
 	public static function queryGroup(){
 		return "  ";
-	}
-	public function type_filed(){
-        return $this->belongsTo('App\Models\typefiled', 'type_filed_id', 'id');
 	}
 
 

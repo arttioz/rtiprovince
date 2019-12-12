@@ -38,6 +38,16 @@
 										 </div>
 									  </div> 					
 									  <div class="form-group  " >
+										<label for="Name Th" class=" control-label col-md-4 text-left"> Name Th <span class="asterix"> * </span></label>
+										<div class="col-md-6">
+										  <input  type='text' name='name_th' id='name_th' value='{{ $row['name_th'] }}' 
+						     class='form-control input-sm ' /> 
+										 </div> 
+										 <div class="col-md-2">
+										 	
+										 </div>
+									  </div> 					
+									  <div class="form-group  " >
 										<label for="Type Filed Id" class=" control-label col-md-4 text-left"> Type Filed Id <span class="asterix"> * </span></label>
 										<div class="col-md-6">
 										  <select name='type_filed_id' rows='5' id='type_filed_id' class='select2 '   ></select> 

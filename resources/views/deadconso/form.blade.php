@@ -12,7 +12,7 @@
 	<div class="page-content row">
 		<div class="page-content-wrapper no-margin">
 
-			{!! Form::open(array('url'=>'deadconso?return='.$return, 'class'=>'form-horizontal validated','files' => true , 'id' => 'main-form' )) !!}
+			{!! Form::open(array('url'=>'deadconso?province_id='.$province_id.'&return='.$return, 'class'=>'form-horizontal validated','files' => true , 'id' => 'main-form' )) !!}
 			<div class="sbox">
 				<div class="sbox-title clearfix">
 					<div class="sbox-tools " >
@@ -563,10 +563,58 @@
 
 								</div>
 							</div>
+{{--							{{$rti_field}}<br>--}}
+							@foreach($rti_provinces as $rti_province)
+{{--								{{$rti_province->rti_fields->name}}--}}
+							<br>
+								{{-- Input --}}
+								@if($rti_province->rti_fields->type_filed->name === 'input')
+									<div class="form-group  "  >
+										<label for="AccLatlong" class=" control-label col-md-4 text-left">
+											{{$rti_province->rti_fields->name_th}} <span class="asterix"> * </span>
+										</label>
+										<div class="col-md-6">
+											<input
+													type='{{$rti_province->inputtypefield->name}}'
+													name="{{$rti_province->rti_fields->name}}"
+													id='{{$rti_province->rti_fields->id}}'
+													@if($rti_field === '')
+														value=''
+													@elseif(isset($rti_field[0][$rti_province->rti_fields->name]))
+														@if($rti_field === '' && $rti_field[0][$rti_province->rti_fields->name] === '')
+															value=""
+														@else
+															value="{{$rti_field[0][$rti_province->rti_fields->name]}}"
+														@endif
+													@endif
+													class='form-control input-sm ' />
+										</div>
+										<div class="col-md-2">
+
+										</div>
+									</div>
+								@endif
+
+
+								{{--Select--}}
+								@if($rti_province->rti_fields->type_filed->name === 'select')
+									<div class="form-group  "  >
+										<label for="AccLatlong" class=" control-label col-md-4 text-left">
+											{{$rti_province->rti_fields->name_th}} <span class="asterix"> * </span>
+										</label>
+										<div class="col-md-6">
+											<select name="{{$rti_province->rti_fields->name}}">
+												<option>
+													test
+												</option>
+											</select>
+										</div>
+									</div>
+								@endif
+							@endforeach
 
 						</fieldset>
 					</div>
-
 
 					<div class="sbox-tools pull-right" >
 						{{--<button name="apply" class="tips btn btn-sm btn-default  "  title="{{ __('core.btn_back') }}" ><i class="fa  fa-check"></i> {{ __('core.sb_apply') }} </button>--}}
