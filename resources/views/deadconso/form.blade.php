@@ -419,24 +419,48 @@
 							<div class="form-group">
 								<label for="AccProv" class=" control-label col-md-4 text-left"> จังหวัดที่ตาย <span class="asterix"> * </span></label>
 								<div class="col-md-6">
-
-									<select name="DeathProv" id="DeathProv">
-
-										@if( Auth::user()->group_id == 1)
-											@foreach($location as $prov)
-
-												<option @if($DeathProv->LOC_CODE == $prov->LOC_CODE) selected  @endif value="{{$prov->LOC_CODE}}">{{trim($prov->LOC_PROVINCE) }}</option>
-
-											@endforeach
+									@if($province_id === '')
+										@if($DeathProv)
+											<select name="DeathProv" id="DeathProv">
+												@foreach($location as $prov)
+													<option @if($DeathProv->LOC_CODE == $prov->LOC_CODE) selected  @endif value="{{$prov->LOC_CODE}}">{{trim($prov->LOC_PROVINCE) }}</option>
+												@endforeach
+											</select>
 										@else
-											@foreach($location as $prov)
-												@if($DeathProv->LOC_CODE == $prov->LOC_CODE)
-													<option  selected  value="{{$prov->LOC_CODE}}">{{trim($prov->LOC_PROVINCE)}}</option>
-												@endif
-											@endforeach
+											<select name="DeathProv" id="DeathProv">
+												@foreach($location as $prov)
+													<option value="{{$prov->LOC_CODE}}">{{trim($prov->LOC_PROVINCE) }}</option>
+												@endforeach
+											</select>
 										@endif
+									@else
+										<select name="DeathProv" id="DeathProv">
+											@foreach($location as $prov)
+												<option @if($DeathProv->LOC_CODE == $prov->LOC_CODE) selected  @endif value="{{$prov->LOC_CODE}}">{{trim($prov->LOC_PROVINCE) }}</option>
+											@endforeach
+										</select>
+									@endif
+{{--									@foreach($location as $prov)--}}
+{{--										{{$prov->LOC_CODE}}--}}
+{{--										{{$DeathProv->LOC_CODE}}--}}
+{{--									@endforeach--}}
+{{--									<select name="DeathProv" id="DeathProv">--}}
 
-									</select>
+{{--										@if( Auth::user()->group_id == 1)--}}
+
+{{--											@foreach($location as $prov)--}}
+{{--												<option @if($DeathProv->LOC_CODE == $prov->LOC_CODE) selected  @endif value="{{$prov->LOC_CODE}}">{{trim($prov->LOC_PROVINCE) }}</option>--}}
+
+{{--											@endforeach--}}
+{{--										@else--}}
+{{--											@foreach($location as $prov)--}}
+{{--												@if($DeathProv->LOC_CODE == $prov->LOC_CODE)--}}
+{{--													<option  selected  value="{{$prov->LOC_CODE}}">{{trim($prov->LOC_PROVINCE)}}</option>--}}
+{{--												@endif--}}
+{{--											@endforeach--}}
+{{--										@endif--}}
+
+{{--									</select>--}}
 								</div>
 								<div class="col-md-2">
 
@@ -453,14 +477,27 @@
 							<div class="form-group  "  style=" padding-top: 30px">
 								<label for="AccProv" class=" control-label col-md-4 text-left"> จังหวัดที่เกิดเหตุ <span class="asterix"> * </span></label>
 								<div class="col-md-6">
-									<select name="AccProv">
-										@foreach($location as $prov)
-											<option class="select_prov" @if($AccProv->LOC_CODE == $prov->LOC_CODE)  selected @endif  value="{{$prov->LOC_CODE}}">{{ trim($prov->LOC_PROVINCE)}}</option>
-										@endforeach
-
-									</select>
-									{{--<input  type='text' name='AccProv' id='AccProv' value='{{ $row['AccProv'] }}'--}}
-									{{--class='form-control input-sm ' />--}}
+									@if($province_id === '')
+										@if($AccProv)
+											<select name="AccProv">
+												@foreach($location as $prov)
+													<option class="select_prov" @if($AccProv->LOC_CODE == $prov->LOC_CODE)  selected @endif  value="{{$prov->LOC_CODE}}">{{ trim($prov->LOC_PROVINCE)}}</option>
+												@endforeach
+											</select>
+										@else
+											<select name="AccProv">
+												@foreach($location as $prov)
+													<option class="select_prov"  value="{{$prov->LOC_CODE}}">{{ trim($prov->LOC_PROVINCE)}}</option>
+												@endforeach
+											</select>
+										@endif
+									@else
+										<select name="AccProv">
+											@foreach($location as $prov)
+												<option class="select_prov" @if($AccProv->LOC_CODE == $prov->LOC_CODE)  selected @endif  value="{{$prov->LOC_CODE}}">{{ trim($prov->LOC_PROVINCE)}}</option>
+											@endforeach
+										</select>
+									@endif
 								</div>
 								<div class="col-md-2">
 
