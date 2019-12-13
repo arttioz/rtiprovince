@@ -14,6 +14,7 @@
 
 			{!! Form::open(array('url'=>'deadconso?province_id='.$province_id.'&return='.$return, 'class'=>'form-horizontal validated','files' => true , 'id' => 'main-form' )) !!}
 			<div class="sbox">
+
 				<div class="sbox-title clearfix">
 					<div class="sbox-tools " >
 						<a href="{{ $url}}" class="tips btn btn-sm "  title="{{ __('core.btn_back') }}" ><i class="fa  fa-times"></i></a>
@@ -417,7 +418,7 @@
 							</div>
 
 							<div class="form-group">
-								<label for="AccProv" class=" control-label col-md-4 text-left"> จังหวัดที่ตาย <span class="asterix"> * </span></label>
+								<label for="DeathProv" class=" control-label col-md-4 text-left"> จังหวัดที่ตาย <span class="asterix"> * </span></label>
 								<div class="col-md-6">
 									@if($province_id === '')
 										@if($DeathProv)
@@ -600,10 +601,8 @@
 
 								</div>
 							</div>
-{{--							{{$rti_field}}<br>--}}
+
 							@foreach($rti_provinces as $rti_province)
-{{--								{{$rti_province->rti_fields->name}}--}}
-							<br>
 								{{-- Input --}}
 								@if($rti_province->rti_fields->type_filed->name === 'input')
 									<div class="form-group  "  >

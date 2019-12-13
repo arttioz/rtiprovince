@@ -71,4 +71,9 @@ Route::resource('ritfiled','RitfiledController');
 Route::resource('deadcosoextra','DeadcosoextraController');
 // End Routes for deadcosoextra 
 
+                    
+// Start Routes for viewdeadconso 
+Route::resource('viewdeadconso','ViewdeadconsoController');
+// End Routes for viewdeadconso 
+
                     ?>

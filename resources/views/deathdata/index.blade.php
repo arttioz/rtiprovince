@@ -72,32 +72,32 @@
 
 
                 <div class="sbox-content">
-                    <div class="row" @if($user_level === 1) style="display: none" @else style="margin: 10px" @endif>
-                        <span class="col-xs-3 col-sm-3 col-md-2"> จำนวนข้อมูล: {{$deaths->total()}} </span>
-                        <button id="export-btn"  style="margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="button">
-                            Download ข้อมูล
-                        </button>
-                        {!! Form::open(array('url'=>'importdata', 'id'=>'import-form', 'enctype' => 'multipart/form-data' )) !!}
+{{--                    <div class="row" @if($user_level === 1) style="display: none" @else style="margin: 10px" @endif>--}}
+{{--                        <span class="col-xs-3 col-sm-3 col-md-2"> จำนวนข้อมูล: {{$deaths->total()}} </span>--}}
+{{--                        <button id="export-btn"  style="margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="button">--}}
+{{--                            Download ข้อมูล--}}
+{{--                        </button>--}}
+{{--                        {!! Form::open(array('url'=>'importdata', 'id'=>'import-form', 'enctype' => 'multipart/form-data' )) !!}--}}
 
-                        <div class="col-xs-3 col-sm-3 col-md-2">
-                            <input type="file" name="import_file" id="import_file"  />
-                            <a href="{{url("template")}}"> ตัวอย่าง File นำเข้า </a>
-                        </div>
+{{--                        <div class="col-xs-3 col-sm-3 col-md-2">--}}
+{{--                            <input type="file" name="import_file" id="import_file"  />--}}
+{{--                            <a href="{{url("template")}}"> ตัวอย่าง File นำเข้า </a>--}}
+{{--                        </div>--}}
 
-                        <button  id="import-btn" style="margin-right: 10px; margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="submit"> Import ข้อมูล </button>
-                        {!! Form::close() !!}
-                        <a href="{{url("deadconso")."/create?province_id=".$province_id."&return=".urlencode( url()->full() )}}">
-                            <button id="insert-btn"  style="margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="button">
-                                เพิ่ม ข้อมูล
-                            </button>
-                        </a>
-                    </div>
+{{--                        <button  id="import-btn" style="margin-right: 10px; margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="submit"> Import ข้อมูล </button>--}}
+{{--                        {!! Form::close() !!}--}}
+{{--                        <a href="{{url("deadconso")."/create?province_id=".$province_id."&return=".urlencode( url()->full() )}}">--}}
+{{--                            <button id="insert-btn"  style="margin-top: -10px" class="btn btn-secondary col-xs-4 col-sm-3 col-md-2" type="button">--}}
+{{--                                เพิ่ม ข้อมูล--}}
+{{--                            </button>--}}
+{{--                        </a>--}}
+{{--                    </div>--}}
                     <div class="table-responsive">
                         <table class="table table-bordered "    >
                             <thead>
                             <tr>
+                                <th scope="col">#</th>
                                 <th scope="col">ไอดี</th>
-                                <th scope="col" @if($user_level === 1) style="display: none" @endif>#</th>
                                 <th scope="col">คำนำหน้าชื่อ</th>
                                 <th scope="col">ชื่อจริง</th>
                                 <th scope="col">นามสกุล</th>
@@ -118,11 +118,14 @@
                             </thead>
                             <tbody>
                             @foreach($deaths  as $death)
-
-                                <tr>
-{{--                                    {{$user_level}}--}}
-                                    <td scope="col" @if($user_level === 1) style="display: none" @endif>
-{{--                                    <td scope="col" @if($user_level == 1) style="display: none" @endif>--}}
+                                    @if($user_level === '1')
+                                    <td scope="col">
+                                        <a href="{{url("deadconso")."/".$death->id."/edit?province_id=".$province_id."&return=". urlencode( url()->full() ) }}" style="color: #0e0e0e">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </a>
+                                    </td>
+                                    @elseif($user_level === '2')
+                                    <td scope="col">
                                         <a href="{{url("deadconso")."/".$death->id."/edit?province_id=".$province_id."&return=". urlencode( url()->full() ) }}" style="color: #0e0e0e">
                                             <i class="fa fa-pencil" aria-hidden="true"></i>
                                         </a>
@@ -130,8 +133,12 @@
                                         <a href="{{url("deadconsohistory")."?id=".$death->id}}" style="color: #0e0e0e">
                                             <i class="fa fa-history" aria-hidden="true"></i>
                                         </a>
-
+{{--                                        <a href="{{url("Viewdeadconso")."/".$death->id."/edit?province_id=".$province_id."&return=". urlencode( url()->full() ) }}" style="color: #0e0e0e">--}}
+                                        <a href="{{url("viewdeadconso")."/".$death->id}}" style="color: #0e0e0e">
+                                            <i class="fa fa-eye" aria-hidden="true"></i>
+                                        </a>
                                     </td>
+                                    @endif
                                     <td scope="col">{{$death->id}}</td>
                                     <td scope="col">{{$death->Prefix}}</td>
                                     <td scope="col">{{$death->Fname}}</td>
