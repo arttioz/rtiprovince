@@ -149,53 +149,101 @@
        </div>
       </div>
 
-      @foreach($rti_provinces as $rti_province)
-       {{-- Input --}}
-       @if($rti_province->rti_fields->type_filed->name === 'input')
-        <div class="form-group  "  >
-         <label style="text-align: right" for="AccLatlong" class=" control-label col-md-4 text-left">
-          {{$rti_province->rti_fields->name_th}} <span class="asterix"> * </span>
-         </label>
-         <div class="col-md-6">
-          <input
-                  readonly
-                  type='{{$rti_province->inputtypefield->name}}'
-                  name="{{$rti_province->rti_fields->name}}"
-                  id='{{$rti_province->rti_fields->id}}'
-                  @if($rti_fields === '')
-                  value=''
-                  @elseif(isset($rti_fields[0][$rti_province->rti_fields->name]))
-                  @if($rti_fields === '' && $rti_fields[0][$rti_province->rti_fields->name] === '')
-                  value=""
-                  @else
-                  value="{{$rti_fields[0][$rti_province->rti_fields->name]}}"
-                  @endif
-                  @endif
-                  class='form-control input-sm ' />
+      @if($rti_provinces)
+       @foreach($rti_provinces as $rti_province)
+        {{-- Input --}}
+        @if($rti_province->rti_fields->type_filed->name === 'input')
+         <div class="form-group  "  >
+          <label style="text-align: right" for="AccLatlong" class=" control-label col-md-4 text-left">
+           {{$rti_province->rti_fields->name_th}} <span class="asterix"> * </span>
+          </label>
+          <div class="col-md-6">
+           <input
+                   readonly
+                   type='{{$rti_province->inputtypefield->name}}'
+                   name="{{$rti_province->rti_fields->name}}"
+                   id='{{$rti_province->rti_fields->id}}'
+                   @if($rti_fields === '')
+                   value=""
+                   @elseif(isset($rti_fields[0][$rti_province->rti_fields->name]))
+                   @if($rti_fields === '' && $rti_fields[0][$rti_province->rti_fields->name] === '')
+                   value=""
+                   @else
+                   value="{{$rti_fields[0][$rti_province->rti_fields->name]}}"
+                   @endif
+                   @endif
+                   class='form-control input-sm ' />
+          </div>
          </div>
-         <div class="col-md-2">
-
-         </div>
-        </div>
-       @endif
+        @endif
 
 
-       {{--Select--}}
-       @if($rti_province->rti_fields->type_filed->name === 'select')
-        <div class="form-group  "  >
-         <label for="AccLatlong" class=" control-label col-md-4 text-left">
-          {{$rti_province->rti_fields->name_th}} <span class="asterix"> * </span>
-         </label>
-         <div class="col-md-6">
-          <select name="{{$rti_province->rti_fields->name}}">
-           <option>
-            test
-           </option>
-          </select>
+        {{--Select--}}
+        @if($rti_province->rti_fields->type_filed->name === 'select')
+         <div class="form-group  "  >
+          <label for="AccLatlong" class=" control-label col-md-4 text-left">
+           {{$rti_province->rti_fields->name_th}} <span class="asterix"> * </span>
+          </label>
+          <div class="col-md-6">
+           <select name="{{$rti_province->rti_fields->name}}">
+            <option>
+             test
+            </option>
+           </select>
+          </div>
          </div>
-        </div>
-       @endif
-      @endforeach
+        @endif
+       @endforeach
+
+      @endif
+
+{{--      @foreach($rti_provinces as $rti_province)--}}
+{{--       --}}{{-- Input --}}
+{{--       @if($rti_province->rti_fields->type_filed->name === 'input')--}}
+{{--        <div class="form-group  "  >--}}
+{{--         <label style="text-align: right" for="AccLatlong" class=" control-label col-md-4 text-left">--}}
+{{--          {{$rti_province->rti_fields->name_th}} <span class="asterix"> * </span>--}}
+{{--         </label>--}}
+{{--         <div class="col-md-6">--}}
+{{--          <input--}}
+{{--                  readonly--}}
+{{--                  type='{{$rti_province->inputtypefield->name}}'--}}
+{{--                  name="{{$rti_province->rti_fields->name}}"--}}
+{{--                  id='{{$rti_province->rti_fields->id}}'--}}
+{{--                  @if($rti_fields === '')--}}
+{{--                  value=""--}}
+{{--                  @elseif(isset($rti_fields[0][$rti_province->rti_fields->name]))--}}
+{{--                  @if($rti_fields === '' && $rti_fields[0][$rti_province->rti_fields->name] === '')--}}
+{{--                  value=""--}}
+{{--                  @else--}}
+{{--                  value="{{$rti_fields[0][$rti_province->rti_fields->name]}}"--}}
+{{--                  @endif--}}
+{{--                  @endif--}}
+{{--                  class='form-control input-sm ' />--}}
+{{--         </div>--}}
+{{--         <div class="col-md-2">--}}
+
+{{--         </div>--}}
+{{--        </div>--}}
+{{--       @endif--}}
+
+
+{{--       --}}{{--Select--}}
+{{--       @if($rti_province->rti_fields->type_filed->name === 'select')--}}
+{{--        <div class="form-group  "  >--}}
+{{--         <label for="AccLatlong" class=" control-label col-md-4 text-left">--}}
+{{--          {{$rti_province->rti_fields->name_th}} <span class="asterix"> * </span>--}}
+{{--         </label>--}}
+{{--         <div class="col-md-6">--}}
+{{--          <select name="{{$rti_province->rti_fields->name}}">--}}
+{{--           <option>--}}
+{{--            test--}}
+{{--           </option>--}}
+{{--          </select>--}}
+{{--         </div>--}}
+{{--        </div>--}}
+{{--       @endif--}}
+{{--      @endforeach--}}
 
      </fieldset>
     </div>

@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\deadconso;
 use App\Models\deadcosoextra;
 use App\Models\location;
 use App\Models\rtiprovincefiled;
@@ -7,6 +8,7 @@ use App\Models\Viewdeadconso;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
 use Illuminate\Support\Facades\Auth;
+use mysql_xdevapi\Collection;
 use Validator, Input, Redirect ;
 
 
@@ -44,11 +46,13 @@ class ViewdeadconsoController extends Controller {
         $this->checkAuth();
         $this->hook( $request , $id );
 
+
         if(!isset($this->data['row']))
             return redirect($this->module)->with('message','Record Not Found !')->with('status','error');
 
-        if($this->access['is_detail'] ==0)
-            return redirect('dashboard')->with('message', __('core.note_restric'))->with('status','error');
+//        if($this->access['is_detail'] ==0)
+//            return redirect('deathdata')->with('message', __('core.note_restric'))->with('status','error');
+
         $AccProv = location::where('LOC_CODE', $this->data['row']->AccProv)->first();
         $this->data['row']->AccProv = $AccProv->LOC_PROVINCE;
 
@@ -94,16 +98,20 @@ class ViewdeadconsoController extends Controller {
         }
 
         $rti_field = deadcosoextra::where('dead_coso_id',$id)->first();
-        $rti_fields = deadcosoextra::where('dead_coso_id',$id)->pluck('option_data');
-        $rti_provinces = rtiprovincefiled::where('province_code',$rti_field->province_code)
-            ->with('rti_fields','inputtypefield')
-            ->get();
+        if (!$rti_field) {
+            $this->data['rti_fields'] = '';
+            $this->data['rti_provinces'] = '';
+        } else {
+            $rti_field->option_data = collect([$rti_field->option_data]);
+            $this->data['rti_fields'] = $rti_field->option_data;
+            $rti_provinces = rtiprovincefiled::where('province_code',$rti_field->province_code)
+                ->with('rti_fields','inputtypefield')
+                ->get();
+            $this->data['rti_provinces'] = $rti_provinces;
+        }
+
         $this->data['row'] = (array) $this->data['row'];
-        $this->data['rti_fields'] = $rti_fields;
-        $this->data['rti_provinces'] = $rti_provinces;
-//        dump($rti_fields[0]['road']);
-//        dump($rti_provinces);
-//        dd();
+
 		return view('viewdeadconso.view',$this->data);
 	}
 	public function create( $id = null)

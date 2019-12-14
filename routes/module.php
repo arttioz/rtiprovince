@@ -76,4 +76,9 @@ Route::resource('deadcosoextra','DeadcosoextraController');
 Route::resource('viewdeadconso','ViewdeadconsoController');
 // End Routes for viewdeadconso 
 
+                    
+// Start Routes for importdata 
+Route::resource('importdata','ImportdataController');
+// End Routes for importdata 
+
                     ?>

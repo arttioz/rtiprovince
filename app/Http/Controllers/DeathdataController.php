@@ -197,7 +197,6 @@ class DeathdataController extends Controller {
 
         $this->checkAuth();
 
-
         $request->validate([
             'import_file' => 'required'
         ]);

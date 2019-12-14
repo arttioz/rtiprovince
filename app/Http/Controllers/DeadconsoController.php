@@ -150,7 +150,7 @@ class DeadconsoController extends Controller {
         $birthDate = $this->data['row']['BirthDate'];
         $birth_date = new Carbon($birthDate);
         $birth_date = $birth_date->subYear(543);
-//        dd($birth_date);
+
         $this->data['row']['BirthDate'] = $birth_date->format('Y-m-d');
 
         //จัดการตัวแปล
@@ -160,9 +160,6 @@ class DeadconsoController extends Controller {
         $rti_field = deadcosoextra::where('dead_coso_id',$id)
             ->where('province_code', $request->province_id)
             ->pluck('option_data');
-//        dump($rti_provinces);
-//        dump($rti_field);
-//        dd();
         $location = location::all();
         $this->data['location'] = $location;
 
