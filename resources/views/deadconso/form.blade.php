@@ -648,7 +648,6 @@
 									</div>
 								@endif
 							@endforeach
-
 						</fieldset>
 					</div>
 

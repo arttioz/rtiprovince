@@ -116,8 +116,7 @@ class DeadconsoController extends Controller {
 
         $location = location::all();
         $this->data['location'] = $location;
-        $this->data['province_id'] = '';
-
+        $this->data['province_id'] = $request->province_id;
 		$this->data['id'] = '';
 		$this->data['rti_field'] = '';
 //        $this->data['url'] =  \Illuminate\Support\Facades\Input::get('return');
@@ -255,23 +254,42 @@ class DeadconsoController extends Controller {
 
 					$id = $this->model->insertRow($data , $request->input( $this->info['key']));
 
-                    // Save to dead_coso_extra DB
-                    $rti_provinces = rtiprovincefiled::where('province_code',$request->province_id)
-                        ->with('rti_fields','inputtypefield')
-                        ->get();
-                    $dead_coso_extra = new deadcosoextra();
-                    $dead_coso_extra->province_code = $request->AccProv;
-                    $dead_coso_extra->dead_coso_id = $id;
-                    $array = array();
-                    if ($rti_provinces) {
-                        foreach ($rti_provinces as $rti_province) {
-                            $name_field = $rti_province->rti_fields->name;
-                            $array[$name_field] = $request->$name_field;
+					// Save to dead_coso_extra DB
+                    $check_dead_coso_extra = deadcosoextra::where('dead_coso_id', $id)->first();
+					if ($check_dead_coso_extra) {
+                        $rti_provinces = rtiprovincefiled::where('province_code',$request->province_id)
+                            ->with('rti_fields','inputtypefield')
+                            ->get();
+                        $dead_coso_extra = deadcosoextra::where('dead_coso_id', $id)->first();
+                        $dead_coso_extra->province_code = $request->AccProv;
+                        $dead_coso_extra->dead_coso_id = $id;
+                        $array = array();
+                        if ($rti_provinces) {
+                            foreach ($rti_provinces as $rti_province) {
+                                $name_field = $rti_province->rti_fields->name;
+                                $array[$name_field] = $request->$name_field;
+                            }
                         }
+                        $dead_coso_extra->option_data = $array;
+                        $dead_coso_extra->save();
+                    } else {
+                        $rti_provinces = rtiprovincefiled::where('province_code',$request->province_id)
+                            ->with('rti_fields','inputtypefield')
+                            ->get();
+                        $dead_coso_extra = new deadcosoextra();
+                        $dead_coso_extra->province_code = $request->AccProv;
+                        $dead_coso_extra->dead_coso_id = $id;
+                        $array = array();
+                        if ($rti_provinces) {
+                            foreach ($rti_provinces as $rti_province) {
+                                $name_field = $rti_province->rti_fields->name;
+                                $array[$name_field] = $request->$name_field;
+                            }
+                        }
+                        $dead_coso_extra->option_data = $array;
+                        $dead_coso_extra->save();
                     }
-//                    $array = json_encode($array);
-                    $dead_coso_extra->option_data = $array;
-                    $dead_coso_extra->save();
+
 
                     //Save Data Edit History
                     $deadconsohistory = new deadconsohistory();
@@ -313,7 +331,6 @@ class DeadconsoController extends Controller {
 					return redirect($this->module.'/'. $request->input(  $this->info['key'] ).'/edit')
 							->with('message',__('core.note_error'))->with('status','error')
 							->withErrors($validator)->withInput();
-
 				}
 				break;
 			case 'public':
