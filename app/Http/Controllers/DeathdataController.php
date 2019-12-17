@@ -1,5 +1,6 @@
 <?php namespace App\Http\Controllers;
 
+use App\Imports\DeaddataImport;
 use App\Models\Deathdata;
 use App\Models\location;
 use App\Models\userslevel;
@@ -200,11 +201,12 @@ class DeathdataController extends Controller {
         $request->validate([
             'import_file' => 'required'
         ]);
+//        Excel::import(new DeaddataImport, $request->file('import_file'));
 
         $excel = App::make('excel');
-
         $path = $request->file('import_file')->getRealPath();
         $data =  $excel->load($path)->get();
+//        dd($data);
 
         if($data->count()){
 
@@ -213,20 +215,20 @@ class DeathdataController extends Controller {
             $upload_id =Auth::user()->id;
 
             foreach ($data as $key => $value) {
-
-
+                $isEmpty = $this->checkRowEmpty($data[$key]);
+                if($isEmpty === true) {
+                    break;
+                }
                 $accidentProv = "";
                 $deathProv = "";
                 if($province_data == null){
-
-
                     $accidentProv = location::where("LOC_PROVINCE",$value->accidentprovince)->first();
+
                     $deathProv = location::where("LOC_PROVINCE",$value->deathprovince)->first();
 
                     if($accidentProv != null){
                         $accidentProv = $accidentProv->LOC_CODE;
                     }
-
                     if($deathProv != null){
                         $deathProv = $deathProv->LOC_CODE;
                     }
@@ -238,24 +240,30 @@ class DeathdataController extends Controller {
                     $value->sex = 2;
                 }
 
-                $death = deathdata::where("DrvSocNO",$value->citizenid)->whereNull("deleted_at")->first();
-
                 try{
-                    $value->birthdate = Carbon::createFromFormat( "d/m/Y", $value->birthdate);
+                    $birthdate = Carbon::createFromFormat('Y-m-d', $value->birthdate);
+                    if($birthdate->year < 2030 ){
+                        $value->birthdate = $birthdate->addYear(543);
+                        $value->birthdate = $birthdate->format('Y-m-d');
+                    }
                 }catch (\Exception $exception){
                     $value->birthdate = null;
                 }
 
                 try{
-                    $value->deaddate = Carbon::createFromFormat( "d/m/Y", $value->deaddate);
+                    $deaddate = Carbon::createFromFormat( 'Y-m-d', $value->deaddate);
+                    if($deaddate->year < 2030 ){
+                        $value->deaddate = $deaddate->addYear(543);
+                        $value->deaddate = $deaddate->format('Y-m-d');
+                    }
                 }catch (\Exception $exception){
-
+                    $value->deaddate = null;
                 }
 
-
+                $death = deathdata::where("DrvSocNO",$value->citizenid)->whereNull("deleted_at")->first();
 
                 if($death){
-                    if($value->prefix != "") $death->Prefix = $value->prefix;
+                    if($value->prefix != "") $death->Prefix = 'นาง';
                     if($value->fname != "") $death->Fname = $value->fname;
                     if($value->lname != "") $death->Lname = $value->lname;
                     if($value->citizenid != "") $death->DrvSocNO = $value->citizenid;
@@ -277,8 +285,10 @@ class DeathdataController extends Controller {
                     $death->IS_UPLOAD = "Y";
 
                     $death->save();
+
                 }else {
-                    $arr[] = ['Prefix' => $value->prefix,
+                    $arr[] = [
+                        'Prefix' => $value->prefix,
                         'Fname' => $value->fname,
                         'Lname' => $value->lname,
                         'DrvSocNO' => $value->citizenid,
@@ -299,10 +309,13 @@ class DeathdataController extends Controller {
                         'upload_name' => $upload_name,
                         'Sex' => $value->sex,
                     ];
+//                    dump($arr);
                 }
+
             }
-
-
+//            dd();
+//            dump($arr);
+//            dd();
             if(!empty($arr)){
                 Deathdata::insert($arr);
             }
@@ -458,5 +471,13 @@ class DeathdataController extends Controller {
 
     }
 
+    private function checkRowEmpty($item) {
+        foreach ($item as $value) {
+            if ($value) {
+                return false;
+            }
+        }
+        return true;
+    }
 
 }

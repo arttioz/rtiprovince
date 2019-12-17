@@ -209,7 +209,6 @@ class DeadconsoController extends Controller {
 //	    dd($request->all());
 
 	    $this->checkAuth();
-//	    $url = $request->input('url');
 	    $url = 'deathdata';
 		$task = $request->input('action_task');
 		switch ($task)

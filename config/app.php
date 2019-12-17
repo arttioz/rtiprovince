@@ -64,7 +64,7 @@ return [
     |
     */
 
-    'timezone' => 'UTC',
+    'timezone' => 'Asia/Bangkok',
 
     /*
     |--------------------------------------------------------------------------
@@ -239,9 +239,10 @@ return [
         'Socialize' => Laravel\Socialite\Facades\Socialite::class,
      //   'Markdown'  => GrahamCampbell\Markdown\Facades\Markdown::class,
         'Socialize' => Laravel\Socialite\Facades\Socialite::class,
-        'PDF'       => 'Vsmoraes\Pdf\PdfFacade',  
+        'PDF'       => 'Vsmoraes\Pdf\PdfFacade',
         'Cart'      => Gloudemans\Shoppingcart\Facades\Cart::class,
-        'Excel' => Maatwebsite\Excel\Facades\Excel::class
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
+
     ],
 
 ];

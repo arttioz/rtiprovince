@@ -9,9 +9,31 @@ class deathdata extends Sximo  {
 
     protected $table = 'dead_conso';
     protected $primaryKey = 'id';
+    public $fillable = [
+        'id',
+        'Prefix',
+        'Fname',
+        'Lname',
+        'DrvSocNO',
+        'Age',
+        'Sex',
+        'BirthDate',
+        'DeadDate',
+        'AccSubDist',
+        'AccDist',
+        'NCAUSE',
+        'Vehicle',
+        'AccProv',
+        'DeathProv',
+        'AccLatlong',
+        'Acclong',
+        'upload_by',
+        'IS_UPLOAD',
+        'upload_name',
+    ];
     use SoftDeletes;
 
-//    protected $dateFormat = 'Y-m-d H:i:s';
+    protected $dateFormat = 'Y-m-d H:i:sO';
 
 
     public function __construct() {
@@ -20,12 +42,11 @@ class deathdata extends Sximo  {
     }
 
 
-//    protected function getDateFormat()
-//    {
-//        return 'd.m.Y';
-//    }
-    
-    
+    protected function getDateFormat()
+    {
+        return 'Y-m-d H:i:s.u';
+    }
+
     public function getGenderAttribute()
     {
 
