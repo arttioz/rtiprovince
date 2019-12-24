@@ -3,6 +3,7 @@
 use App\Imports\DeaddataImport;
 use App\Models\Deathdata;
 use App\Models\location;
+use App\Models\province;
 use App\Models\userslevel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -165,14 +166,14 @@ class DeathdataController extends Controller {
 
         $userslevel_names = userslevel::where('id',Auth::user()->user_level)->pluck('name');
 
+        $name_province = location::where('LOC_CODE',$province_id)->first();
 
         $this->data['userslevel_name'] = $userslevel_names[0];
         $this->data['deaths'] = $deaths;
+        $this->data['province_name'] = $name_province->LOC_PROVINCE;
         $this->data['province_id'] = $province_id;
         $this->data['user_level'] = Auth::user()->user_level;
-//        dd($this->data['user_level']);
         return view('deathdata.index',$this->data);
-//        return view('layouts.sidebar',$this->data);
     }
 
     public function show(Request $request, $id = null)

@@ -105,25 +105,26 @@ class DeadconsoController extends Controller {
 
         // จัดการตัวแปร
         $rti_provinces = rtiprovincefiled::where('province_code',$request->province_id)
+                ->where('is_enable', 1)
                 ->with('rti_fields','inputtypefield')
                 ->get();
 
 //        echo $rti_provinces.'<br>';
 //        dd();
-        $rti_field = deadcosoextra::where('dead_coso_id',$id)
-            ->where('province_code', $request->province_id)
-            ->pluck('option_data');
-
+//        $rti_field = deadcosoextra::where('dead_coso_id',$id)
+//            ->where('province_code', $request->province_id)
+//            ->pluck('option_data');
+//        echo $rti_field.'<br>';
+//        dd();
         $location = location::all();
         $this->data['location'] = $location;
         $this->data['province_id'] = $request->province_id;
 		$this->data['id'] = '';
 		$this->data['rti_field'] = '';
-//        $this->data['url'] =  \Illuminate\Support\Facades\Input::get('return');
-//		$this->data['AccProv'] = [];
-//		$this->data['DeathProv'] = [];
+
 		return view($this->module.'.form',$this->data)->with('rti_provinces', $rti_provinces);
 	}
+
 	function edit( Request $request , $id ) {
 	    $this->checkAuth();
 		$this->hook( $request , $id );
@@ -154,11 +155,13 @@ class DeadconsoController extends Controller {
 
         //จัดการตัวแปล
         $rti_provinces = rtiprovincefiled::where('province_code',$request->province_id)
+            ->where('is_enable', 1)
             ->with('rti_fields','inputtypefield')
             ->get();
         $rti_field = deadcosoextra::where('dead_coso_id',$id)
             ->where('province_code', $request->province_id)
             ->pluck('option_data');
+
         $location = location::all();
         $this->data['location'] = $location;
 
@@ -166,8 +169,11 @@ class DeadconsoController extends Controller {
 
 		$this->data['id'] = $id;
 		$this->data['rti_provinces'] = $rti_provinces;
-		$this->data['rti_field'] = $rti_field;
 
+		$this->data['rti_field'] = $rti_field;
+//        dump($rti_provinces);
+//        dump($rti_field);
+//        dd();
 		return view($this->module.'.form',$this->data);
 	}
 	function show( Request $request , $id )
@@ -255,6 +261,7 @@ class DeadconsoController extends Controller {
 
 					// Save to dead_coso_extra DB
                     $check_dead_coso_extra = deadcosoextra::where('dead_coso_id', $id)->first();
+//                    dd($check_dead_coso_extra);
 					if ($check_dead_coso_extra) {
                         $rti_provinces = rtiprovincefiled::where('province_code',$request->province_id)
                             ->with('rti_fields','inputtypefield')

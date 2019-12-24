@@ -1,58 +1,60 @@
 <?php namespace App\Http\Controllers;
 
+use App\Models\location;
 use App\Models\Ritfiled;
+use App\Models\rtiprovincefiled;
 use Illuminate\Http\Request;
 use Illuminate\Pagination\LengthAwarePaginator as Paginator;
-use Validator, Input, Redirect ; 
+use Validator, Input, Redirect ;
 
 
 class RitfiledController extends Controller {
 
 	protected $layout = "layouts.main";
-	protected $data = array();	
+	protected $data = array();
 	public $module = 'ritfiled';
 	static $per_page	= '10';
 
 	public function __construct()
-	{		
+	{
 		parent::__construct();
-		$this->model = new Ritfiled();	
-		
-		$this->info = $this->model->makeInfo( $this->module);	
+		$this->model = new Ritfiled();
+
+		$this->info = $this->model->makeInfo( $this->module);
 		$this->data = array(
 			'pageTitle'	=> 	$this->info['title'],
 			'pageNote'	=>  $this->info['note'],
 			'pageModule'=> 'ritfiled',
 			'return'	=> self::returnUrl()
-			
+
 		);
-		
+
 	}
 
 	public function index( Request $request )
 	{
-		// Make Sure users Logged 
-		if(!\Auth::check()) 
+		// Make Sure users Logged
+		if(!\Auth::check())
 			return redirect('user/login')->with('status', 'error')->with('message','You are not login');
 		$this->grab( $request) ;
-		if($this->access['is_view'] ==0) 
-			return redirect('dashboard')->with('message', __('core.note_restric'))->with('status','error');				
+		if($this->access['is_view'] ==0)
+			return redirect('dashboard')->with('message', __('core.note_restric'))->with('status','error');
 		// Render into template
 		return view( $this->module.'.index',$this->data);
-	}	
+	}
 
-	function create( Request $request , $id =0 ) 
+	function create( Request $request , $id =0 )
 	{
 		$this->hook( $request  );
-		if($this->access['is_add'] ==0) 
+		if($this->access['is_add'] ==0)
 			return redirect('dashboard')->with('message', __('core.note_restric'))->with('status','error');
 
-		$this->data['row'] = $this->model->getColumnTable( $this->info['table']); 
-		
+		$this->data['row'] = $this->model->getColumnTable( $this->info['table']);
+
 		$this->data['id'] = '';
 		return view($this->module.'.form',$this->data);
 	}
-	function edit( Request $request , $id ) 
+	function edit( Request $request , $id )
 	{
 		$this->hook( $request , $id );
 		if(!isset($this->data['row']))
@@ -60,11 +62,11 @@ class RitfiledController extends Controller {
 		if($this->access['is_edit'] ==0 )
 			return redirect('dashboard')->with('message',__('core.note_restric'))->with('status','error');
 		$this->data['row'] = (array) $this->data['row'];
-		
+
 		$this->data['id'] = $id;
 		return view($this->module.'.form',$this->data);
-	}	
-	function show( Request $request , $id ) 
+	}
+	function show( Request $request , $id )
 	{
 		/* Handle import , export and view */
 		$task =$id ;
@@ -90,11 +92,11 @@ class RitfiledController extends Controller {
 				if(!isset($this->data['row']))
 					return redirect($this->module)->with('message','Record Not Found !')->with('status','error');
 
-				if($this->access['is_detail'] ==0) 
+				if($this->access['is_detail'] ==0)
 					return redirect('dashboard')->with('message', __('core.note_restric'))->with('status','error');
 
-				return view($this->module.'.view',$this->data);	
-				break;		
+				return view($this->module.'.view',$this->data);
+				break;
 		}
 	}
 	function store( Request $request  )
@@ -105,18 +107,42 @@ class RitfiledController extends Controller {
 			default:
 				$rules = $this->validateForm();
 				$validator = Validator::make($request->all(), $rules);
-				if ($validator->passes()) 
+				if ($validator->passes())
 				{
 					$data = $this->validatePost( $request );
 					$id = $this->model->insertRow($data , $request->input( $this->info['key']));
-					
+
+                    // Get Province Code
+                    $provinces = location::all();
+                    // Get loop count
+                    $count_province = count($provinces);
+                    // Get RTI Field
+                    $rti_field = ritfiled::all();
+                    $count_rti_field = count($rti_field);
+
+                    $array = [];
+                    for ($i=0; $i < $count_province; $i++) {
+//                        for ($x=0; $x < $count_rti_field; $x++) {
+                            array_push($array ,[
+                                "province_code" => $provinces[$i]->LOC_CODE,
+                                "rti_field_id" => $id,
+                                "input_type" => $request->input_type,
+                                "style" => $request->style,
+                                "option" => $request->option,
+                                "is_enable" => 0,
+                            ]);
+//                        }
+                    }
+                    Rtiprovincefiled::insert($array);
+
+
 					/* Insert logs */
 					$this->model->logs($request , $id);
 					if(!is_null($request->input('apply')))
 						return redirect( $this->module .'/'.$id.'/edit?'. $this->returnUrl() )->with('message',__('core.note_success'))->with('status','success');
 
 					return redirect( $this->module .'?'. $this->returnUrl() )->with('message',__('core.note_success'))->with('status','success');
-				} 
+				}
 				else {
 					return redirect($this->module.'/'. $request->input(  $this->info['key'] ).'/edit')
 							->with('message',__('core.note_error'))->with('status','error')
@@ -140,36 +166,36 @@ class RitfiledController extends Controller {
 			case 'copy':
 				$result = $this->copy( $request );
 				return redirect($this->module.'?'.$this->returnUrl())->with($result);
-				break;		
-		}	
-	
-	}	
+				break;
+		}
+
+	}
 
 	public function destroy( $request)
 	{
-		// Make Sure users Logged 
-		if(!\Auth::check()) 
+		// Make Sure users Logged
+		if(!\Auth::check())
 			return redirect('user/login')->with('status', 'error')->with('message','You are not login');
 
 		$this->access = $this->model->validAccess($this->info['id'] , session('gid'));
-		if($this->access['is_remove'] ==0) 
+		if($this->access['is_remove'] ==0)
 			return redirect('dashboard')
 				->with('message', __('core.note_restric'))->with('status','error');
-		// delete multipe rows 
+		// delete multipe rows
 		if(count($request->input('ids')) >=1)
 		{
 			$this->model->destroy($request->input('ids'));
-			
+
 			\SiteHelpers::auditTrail( $request , "ID : ".implode(",",$request->input('ids'))."  , Has Been Removed Successfull");
 			// redirect
-        	return ['message'=>__('core.note_success_delete'),'status'=>'success'];	
-	
+        	return ['message'=>__('core.note_success_delete'),'status'=>'success'];
+
 		} else {
-			return ['message'=>__('No Item Deleted'),'status'=>'error'];				
+			return ['message'=>__('No Item Deleted'),'status'=>'error'];
 		}
 
-	}	
-	
+	}
+
 	public static function display(  )
 	{
 		$mode  = isset($_GET['view']) ? 'view' : 'default' ;
@@ -177,8 +203,8 @@ class RitfiledController extends Controller {
 		$info = $model::makeInfo('ritfiled');
 		$data = array(
 			'pageTitle'	=> 	$info['title'],
-			'pageNote'	=>  $info['note']			
-		);	
+			'pageNote'	=>  $info['note']
+		);
 		if($mode == 'view')
 		{
 			$id = $_GET['view'];
@@ -188,9 +214,9 @@ class RitfiledController extends Controller {
 				$data['row'] =  $row;
 				$data['fields'] 		=  \SiteHelpers::fieldLang($info['config']['grid']);
 				$data['id'] = $id;
-				return view('ritfiled.public.view',$data);			
-			}			
-		} 
+				return view('ritfiled.public.view',$data);
+			}
+		}
 		else {
 
 			$page = isset($_GET['page']) ? $_GET['page'] : 1;
@@ -200,29 +226,29 @@ class RitfiledController extends Controller {
 				'sort'		=> $info['key'] ,
 				'order'		=> 'asc',
 				'params'	=> '',
-				'global'	=> 1 
+				'global'	=> 1
 			);
 
 			$result = $model::getRows( $params );
 			$data['tableGrid'] 	= $info['config']['grid'];
-			$data['rowData'] 	= $result['rows'];	
+			$data['rowData'] 	= $result['rows'];
 
-			$page = $page >= 1 && filter_var($page, FILTER_VALIDATE_INT) !== false ? $page : 1;	
-			$pagination = new Paginator($result['rows'], $result['total'], $params['limit']);	
+			$page = $page >= 1 && filter_var($page, FILTER_VALIDATE_INT) !== false ? $page : 1;
+			$pagination = new Paginator($result['rows'], $result['total'], $params['limit']);
 			$pagination->setPath('');
-			$data['i']			= ($page * $params['limit'])- $params['limit']; 
+			$data['i']			= ($page * $params['limit'])- $params['limit'];
 			$data['pagination'] = $pagination;
-			return view('ritfiled.public.index',$data);	
+			return view('ritfiled.public.index',$data);
 		}
 
 	}
 	function store_public( $request)
 	{
-		
+
 		$rules = $this->validateForm();
-		$validator = Validator::make($request->all(), $rules);	
+		$validator = Validator::make($request->all(), $rules);
 		if ($validator->passes()) {
-			$data = $this->validatePost(  $request );		
+			$data = $this->validatePost(  $request );
 			 $this->model->insertRow($data , $request->input('id'));
 			return  Redirect::back()->with('message',__('core.note_success'))->with('status','success');
 		} else {
@@ -230,7 +256,7 @@ class RitfiledController extends Controller {
 			return  Redirect::back()->with('message',__('core.note_error'))->with('status','error')
 			->withErrors($validator)->withInput();
 
-		}	
-	
+		}
+
 	}
 }
