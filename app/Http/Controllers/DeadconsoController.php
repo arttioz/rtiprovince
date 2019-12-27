@@ -160,8 +160,14 @@ class DeadconsoController extends Controller {
             ->get();
         $rti_field = deadcosoextra::where('dead_coso_id',$id)
             ->where('province_code', $request->province_id)
-            ->pluck('option_data');
+//            ->pluck('option_data');
+            ->first();
 
+        if ($rti_field) {
+            $this->data['rti_field'] = $rti_field->option_data;
+        }else {
+            $this->data['rti_field'] = '';
+        }
         $location = location::all();
         $this->data['location'] = $location;
 
@@ -170,9 +176,7 @@ class DeadconsoController extends Controller {
 		$this->data['id'] = $id;
 		$this->data['rti_provinces'] = $rti_provinces;
 
-		$this->data['rti_field'] = $rti_field;
-//        dump($rti_provinces);
-//        dump($rti_field);
+//		dump($this->data['rti_field']);
 //        dd();
 		return view($this->module.'.form',$this->data);
 	}

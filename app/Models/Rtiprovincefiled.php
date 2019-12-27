@@ -30,6 +30,7 @@ class rtiprovincefiled extends Sximo  {
     public function rti_fields(){
         return $this->belongsTo('App\Models\Ritfiled','rti_field_id', 'id')->with('type_filed');
     }
+
     public function inputtypefield(){
         return $this->belongsTo('App\Models\Inputtypefield','input_type', 'id');
     }

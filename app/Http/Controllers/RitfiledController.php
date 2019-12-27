@@ -109,20 +109,18 @@ class RitfiledController extends Controller {
 				$validator = Validator::make($request->all(), $rules);
 				if ($validator->passes())
 				{
+
 					$data = $this->validatePost( $request );
 					$id = $this->model->insertRow($data , $request->input( $this->info['key']));
 
-                    // Get Province Code
-                    $provinces = location::all();
-                    // Get loop count
-                    $count_province = count($provinces);
-                    // Get RTI Field
-                    $rti_field = ritfiled::all();
-                    $count_rti_field = count($rti_field);
+                    $id_rti_province = rtiprovincefiled::where('rti_field_id',$id)->first();
+                    if (empty($id_rti_province)) {
+                        $provinces = location::all();
+                        // Get loop count
+                        $count_province = count($provinces);
 
-                    $array = [];
-                    for ($i=0; $i < $count_province; $i++) {
-//                        for ($x=0; $x < $count_rti_field; $x++) {
+                        $array = [];
+                        for ($i=0; $i < $count_province; $i++) {
                             array_push($array ,[
                                 "province_code" => $provinces[$i]->LOC_CODE,
                                 "rti_field_id" => $id,
@@ -131,9 +129,9 @@ class RitfiledController extends Controller {
                                 "option" => $request->option,
                                 "is_enable" => 0,
                             ]);
-//                        }
+                        }
+                        Rtiprovincefiled::insert($array);
                     }
-                    Rtiprovincefiled::insert($array);
 
 
 					/* Insert logs */

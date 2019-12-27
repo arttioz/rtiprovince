@@ -601,65 +601,65 @@
 
 								</div>
 							</div>
-
-							<!-- RTI Fields -->
-							@foreach($rti_provinces as $rti_province)
-								{{-- Input --}}
-{{--							{{$rti_province->inputtypefield['name']}}--}}
-								@if($rti_province->rti_fields->type_filed->name === 'input')
-									<div class="form-group  "  >
-										<label for="AccLatlong" class=" control-label col-md-4 text-left">
-											{{$rti_province->rti_fields->name_th}} <span class="asterix"> * </span>
-										</label>
-										<div class="col-md-6">
-
-											<input
-													style="{{$rti_province->style}}"
-													type='{{$rti_province->inputtypefield->name}}'
-													name="{{$rti_province->rti_fields->name}}"
-													id='{{$rti_province->rti_fields->id}}'
-													@if($rti_field === '')
-														value=''
-													@elseif(isset($rti_field[0][$rti_province->rti_fields->name]))
-														@if($rti_field === '' && $rti_field[0][$rti_province->rti_fields->name] === '')
-															value=""
-														@else
-															value="{{$rti_field[0][$rti_province->rti_fields->name]}}"
+								<!-- RTI Fields -->
+								@foreach($rti_provinces as $rti_province)
+									{{-- Input --}}
+									@if($rti_province->rti_fields->type_filed->name === 'input')
+										<div class="form-group  "  >
+											<label for="AccLatlong" class=" control-label col-md-4 text-left">
+												{{$rti_province->rti_fields->name_th}} <span class="asterix"> * </span>
+											</label>
+											<div class="col-md-6">
+{{--												{{$rti_province->rti_fields->name}}--}}
+{{--												{{$rti_field[$rti_province->rti_fields->name]}}--}}
+												<input
+														style="{{$rti_province->style}}"
+														type='{{$rti_province->inputtypefield->name}}'
+														name="{{$rti_province->rti_fields->name}}"
+														id='{{$rti_province->rti_fields->id}}'
+														@if($rti_field === '')
+															value=''
+														@elseif(isset($rti_field[$rti_province->rti_fields->name]))
+															@if($rti_field === '' && $rti_field[$rti_province->rti_fields->name] === '')
+																value=""
+															@else
+																value="{{$rti_field[$rti_province->rti_fields->name]}}"
+															@endif
 														@endif
-													@endif
-													class='form-control input-sm ' />
+														class='form-control input-sm ' />
+											</div>
+											<div class="col-md-2">
+											</div>
 										</div>
-										<div class="col-md-2">
-										</div>
-									</div>
-								@endif
+									@endif
 
 
-								{{--Select--}}
-								@if($rti_province->rti_fields->type_filed->name === 'select')
-									<div class="form-group"  >
-										<label for="AccLatlong" class=" control-label col-md-4 text-left">
-											{{$rti_province->rti_fields->name_th}} <span class="asterix"> * </span>
-										</label>
+									{{--Select--}}
+									@if($rti_province->rti_fields->type_filed->name === 'select')
+										<div class="form-group"  >
+											<label for="AccLatlong" class=" control-label col-md-4 text-left">
+												{{$rti_province->rti_fields->name_th}} <span class="asterix"> * </span>
+											</label>
 
-										<div class="col-md-6">
-											<select name="{{$rti_province->rti_fields->name}}" style="{{$rti_province->style}}">
-												@foreach(json_decode($rti_province->option) as $option)
-													@if($rti_field === '')
-														<option>
-															{{$option}}
-														</option>
-													@else
-														<option @if($rti_field[0][$rti_province->rti_fields->name] === $option) selected @endif>
-															{{$option}}
-														</option>
-													@endif
-												@endforeach
-											</select>
+											<div class="col-md-6">
+												<select name="{{$rti_province->rti_fields->name}}" style="{{$rti_province->style}}">
+													@foreach(json_decode($rti_province->option) as $option)
+														@if($rti_field === '')
+															<option>
+																{{$option}}
+															</option>
+														@else
+															<option @if($rti_field[$rti_province->rti_fields->name] === $option) selected @endif>
+																{{$option}}
+															</option>
+														@endif
+
+													@endforeach
+												</select>
+											</div>
 										</div>
-									</div>
-								@endif
-							@endforeach
+									@endif
+								@endforeach
 						</fieldset>
 					</div>
 

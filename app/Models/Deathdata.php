@@ -122,5 +122,7 @@ class deathdata extends Sximo  {
         return "  ";
     }
 
-
+    public function deadcosoextra(){
+        return $this->belongsTo('App\Models\Deadcosoextra', 'id', 'dead_coso_id');
+    }
 }

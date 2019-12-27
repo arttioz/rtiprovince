@@ -12,7 +12,7 @@
         @endif
         @if($user_level === '2')
         <div id="header-level2">
-            <h1> {{ $pageTitle }} <h4> {{$userslevel_name}}: {{$province_id}}</h4></h1>
+            <h1> {{ $pageTitle }} <h4> {{$userslevel_name}}: {{$province_name}}</h4></h1>
             <ol class="breadcrumb">
                 <li><a href="#"><i class="fa fa-home"></i> Home</a></li>
                 <li  class="active"> {{ $pageTitle }} </li>
@@ -191,8 +191,9 @@
 
             var start = $("#startDate").val();
             var end = $("#endDate").val();
-            var province_id = $("#province_id").val();
-
+            // var province_id = $("#province_id").val();
+            var province_id = `{{$province_id}}`;
+            console.log(province_id)
             var url = '{{url("exportdata")}}?start='+start+"&end="+end+"&province_id="+province_id;
 
 //            alert(url);

@@ -1,9 +1,11 @@
 <?php namespace App\Http\Controllers;
 
 use App\Imports\DeaddataImport;
+use App\Models\deadcosoextra;
 use App\Models\Deathdata;
 use App\Models\location;
 use App\Models\province;
+use App\Models\rtiprovincefiled;
 use App\Models\userslevel;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -207,7 +209,6 @@ class DeathdataController extends Controller {
         $excel = App::make('excel');
         $path = $request->file('import_file')->getRealPath();
         $data =  $excel->load($path)->get();
-//        dd($data);
 
         if($data->count()){
 
@@ -246,25 +247,40 @@ class DeathdataController extends Controller {
                     if($birthdate->year < 2030 ){
                         $value->birthdate = $birthdate->addYear(543);
                         $value->birthdate = $birthdate->format('Y-m-d');
+                    } else {
+                        $value->birthdate = $birthdate->format('Y-m-d');
                     }
                 }catch (\Exception $exception){
-                    $value->birthdate = null;
+                    $birthdate = Carbon::createFromFormat('d/m/Y', $value->birthdate);
+                    if($birthdate->year < 2030 ){
+                        $value->birthdate = $birthdate->addYear(543);
+                        $value->birthdate = $birthdate->format('Y-m-d');
+                    } else {
+                        $value->birthdate = $birthdate->format('Y-m-d');
+                    }
                 }
-
                 try{
                     $deaddate = Carbon::createFromFormat( 'Y-m-d', $value->deaddate);
                     if($deaddate->year < 2030 ){
                         $value->deaddate = $deaddate->addYear(543);
                         $value->deaddate = $deaddate->format('Y-m-d');
+                    } else {
+                        $value->deaddate = $birthdate->format('Y-m-d');
                     }
                 }catch (\Exception $exception){
-                    $value->deaddate = null;
+                    $deaddate = Carbon::createFromFormat('d/m/Y', $value->deaddate);
+                    if($deaddate->year < 2030 ){
+                        $value->deaddate = $deaddate->addYear(543);
+                        $value->deaddate = $deaddate->format('Y-m-d');
+                    } else {
+                        $value->deaddate = $deaddate->format('Y-m-d');
+                    }
                 }
 
                 $death = deathdata::where("DrvSocNO",$value->citizenid)->whereNull("deleted_at")->first();
-
+                $user = Auth::user();
                 if($death){
-                    if($value->prefix != "") $death->Prefix = 'นาง';
+                    if($value->prefix != "") $death->Prefix = $value->prefix;
                     if($value->fname != "") $death->Fname = $value->fname;
                     if($value->lname != "") $death->Lname = $value->lname;
                     if($value->citizenid != "") $death->DrvSocNO = $value->citizenid;
@@ -286,6 +302,30 @@ class DeathdataController extends Controller {
                     $death->IS_UPLOAD = "Y";
 
                     $death->save();
+
+                    // update to deathcosoextra
+                    $deathcoso_extra = deadcosoextra::where('dead_coso_id', $death->id)->first();
+                    $array_edit = [];
+                    // get field rti_province
+                    $rti_provinces = rtiprovincefiled::where('province_code',$user->province_id)
+                        ->where('is_enable',1)
+                        ->with('rti_fields','inputtypefield')
+                        ->get();
+                    if ($rti_provinces) {
+                        foreach ($rti_provinces as $rti_province) {
+                            $name_field = $rti_province->rti_fields->name;
+                            if ($value->$name_field) {
+                                $array_edit[$name_field] = $value->$name_field;
+                            }
+                        }
+                    } else {
+                        echo 'ID data not found!';
+                    }
+                    // save
+                    if (!empty($array_edit)) {
+                        $deathcoso_extra->option_data = $array_edit;
+                        $deathcoso_extra->save();
+                    }
 
                 }else {
                     $arr[] = [
@@ -309,19 +349,56 @@ class DeathdataController extends Controller {
                         'IS_UPLOAD' => "Y",
                         'upload_name' => $upload_name,
                         'Sex' => $value->sex,
+
                     ];
-//                    dump($arr);
                 }
 
             }
-//            dd();
-//            dump($arr);
-//            dd();
+
             if(!empty($arr)){
-                Deathdata::insert($arr);
+                $deathdata_id = Deathdata::insert($arr);
+
+                foreach ($arr as $id_deathdata) {
+
+                    // get id form deathdata
+                    $id = deathdata::where('DrvSocNO', $id_deathdata['DrvSocNO'])->first();
+
+                    // get field rti_province
+                    $rti_provinces = rtiprovincefiled::where('province_code',$user->province_id)
+                        ->where('is_enable',1)
+                        ->with('rti_fields','inputtypefield')
+                        ->get();
+
+                    // set data to deadcosoextra
+                    $array_add = [];
+                    foreach ($data as $key1 => $value1) {
+
+                        $dead_coso_extra = new deadcosoextra;
+                        $dead_coso_extra->province_code = $user->province_id;
+                        $dead_coso_extra->dead_coso_id = $id->id;
+
+                        if ($rti_provinces) {
+                            foreach ($rti_provinces as $rti_province) {
+                                $name_field = $rti_province->rti_fields->name;
+                                if ($value1->$name_field) {
+                                    $array_add[$name_field] = $value1->$name_field;
+                                }
+                            }
+                        } else {
+                            echo 'ID data not found!';
+                        }
+                    }
+                    // save
+                    if (!empty($array_add)) {
+                        $dead_coso_extra->option_data = $array_add;
+                        $dead_coso_extra->save();
+                    }
+                }
+
+
             }
         }
-
+//        dd();
         return back()->with('success', 'Insert Record successfully.');
 
 
@@ -377,6 +454,7 @@ class DeathdataController extends Controller {
 
         $deaths = deathdata::select(
                 'dead_conso.Prefix as Prefix',
+                'dead_conso.id as Id',
                 'dead_conso.Fname as Fname',
                 'dead_conso.Lname as Lname',
                 'dead_conso.DrvSocNO as CitizenID',
@@ -395,9 +473,7 @@ class DeathdataController extends Controller {
                 'dead_conso.AccProv as AccidentProvince',
                 'dead_conso.DeathProv as DeathProvince',
                 'dead_conso.AccLatlong as Latitude',
-                'dead_conso.Acclong as Longitude' );
-
-
+                'dead_conso.Acclong as Longitude');
 
         $deaths = $deaths->whereNull("deleted_at");
 
@@ -415,8 +491,11 @@ class DeathdataController extends Controller {
             $deaths = $deaths->where('DrvSocNO', $citizen_id);
         }
 
+        $user = Auth::user();
 
         $data = $deaths->get();
+
+
 
         $locations = location::all();
         $location_arr = [];
@@ -424,6 +503,26 @@ class DeathdataController extends Controller {
             $location_arr[$location->LOC_CODE] = $location->LOC_PROVINCE;
         }
         foreach ($data as $row){
+
+            $rti_provinces = DB::table('rti_field_province')
+                ->join('rti_filed','rti_field_province.rti_field_id', '=', 'rti_filed.id')
+                ->where('province_code',$user->province_id)
+                ->where('is_enable',1)
+                ->pluck('name');
+
+            foreach ($rti_provinces as $rti_province) {
+                $row->$rti_province = '';
+//                dump($rti_province);
+                $deadcosoextras = deadcosoextra::where('province_code',$province_id)->where('dead_coso_id',$row->Id)->pluck('option_data');
+//                dd($deadcosoextras);
+                foreach ($deadcosoextras as $deadcosoextra) {
+                    foreach ($deadcosoextra as $key => $value) {
+                        if ($rti_province === $key && ($value !== '' && $value !== null)) {
+                            $row->$rti_province = $value;
+                        }
+                    }
+                }
+            }
 
             if (array_key_exists($row->AccidentProvince,$location_arr))
             {
@@ -435,7 +534,7 @@ class DeathdataController extends Controller {
                 $row->DeathProvince = $location_arr[$row->DeathProvince] ;
             }
         }
-
+//        dd($data);
 
         return Excel::create('rtidata', function($excel) use ($data) {
             $excel->sheet('sheet', function($sheet) use ($data)
